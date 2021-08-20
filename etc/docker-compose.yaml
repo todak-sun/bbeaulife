@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres:13.4
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: todak
+      POSTGRES_USER: todak
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
