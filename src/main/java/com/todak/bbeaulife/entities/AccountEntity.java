@@ -15,7 +15,8 @@ import javax.persistence.*;
 })
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Account extends AbstractDateTimeEntity {
+@Table(name = "ACCOUNT")
+public class AccountEntity extends AbstractDateTimeEntity {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ACCOUNT_ID")
@@ -28,7 +29,7 @@ public class Account extends AbstractDateTimeEntity {
     @Column(name = "PASSWORD")
     private String password;
 
-    public Account(String email, String password) {
+    public AccountEntity(String email, String password) {
         this.email = email;
         this.password = password;
     }

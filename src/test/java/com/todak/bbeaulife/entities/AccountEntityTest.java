@@ -5,13 +5,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-class AccountTest {
+class AccountEntityTest {
 
     @Test
     public void createTest() {
 
-        Account account = new Account("tjsdydwn@gmail.com", "password");
-        assertNotNull(account);
+        AccountEntity accountEntity = new AccountEntity("tjsdydwn@gmail.com", "password");
+        assertNotNull(accountEntity);
     }
 
 }
