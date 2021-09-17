@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-class AccountEntityTest {
+class MemberEntityTest {
 
     @Test
     public void createTest() {
