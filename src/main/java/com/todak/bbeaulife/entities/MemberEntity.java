@@ -1,10 +1,12 @@
 package com.todak.bbeaulife.entities;
 
+import com.todak.bbeaulife.type.CoupleRole;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AttributeOverrides({
@@ -15,11 +17,12 @@ import javax.persistence.*;
 })
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "ACCOUNT")
-public class AccountEntity extends AbstractDateTimeEntity {
+@Table(name = "MEMBER")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public class MemberEntity extends AbstractDateTimeEntity {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ACCOUNT_ID")
+    @Column(name = "MEMBER_ID")
     @Id
     private Long id;
 
@@ -29,8 +32,19 @@ public class AccountEntity extends AbstractDateTimeEntity {
     @Column(name = "PASSWORD")
     private String password;
 
-    public AccountEntity(String email, String password) {
-        this.email = email;
-        this.password = password;
+    @Column(name = "ROLE")
+    @Enumerated(EnumType.STRING)
+    private CoupleRole role;
+
+    @OneToMany
+    @JoinColumn(name = "COUPLE_MEMBER_ID")
+    private List<CoupleMemberEntity> coupleMember;
+
+    public CoupleMemberEntity relate(CoupleEntity couple) {
+        CoupleMemberEntity coupleMemberEntity = CoupleMemberEntity.create(couple, this);
+        this.coupleMember.add(coupleMemberEntity);
+        return coupleMemberEntity;
     }
+
+
 }

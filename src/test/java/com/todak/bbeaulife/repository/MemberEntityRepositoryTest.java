@@ -1,6 +1,6 @@
 package com.todak.bbeaulife.repository;
 
-import com.todak.bbeaulife.entities.AccountEntity;
+import com.todak.bbeaulife.application.couple.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,12 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 class MemberEntityRepositoryTest {
 
     @Autowired
-    AccountRepository accountRepository;
+    MemberRepository memberRepository;
 
     @Test
     public void saveTest() {
-        AccountEntity accountEntity = new AccountEntity("tjsdydwn@gmail.com", "password");
-        accountRepository.save(accountEntity);
+
     }
 
 }

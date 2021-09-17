@@ -1,4 +1,4 @@
-package com.todak.bbeaulife.application;
+package com.todak.bbeaulife.application.memory;
 
 import java.time.LocalDateTime;
 
