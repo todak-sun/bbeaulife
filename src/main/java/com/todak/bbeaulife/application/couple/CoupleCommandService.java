@@ -18,8 +18,7 @@ public class CoupleCommandService {
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 파트너"));
         MemberEntity me = memberRepository.getById(myId);
 
-
-
+        return null;
     }
 
 }
