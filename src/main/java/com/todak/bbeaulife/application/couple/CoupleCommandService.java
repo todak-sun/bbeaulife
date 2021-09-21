@@ -13,6 +13,9 @@ public class CoupleCommandService {
 
 
     public Couple relate(Long myId, CoupleRole myRole, Long coupleId, Long partnerId) {
+        // 내가 커플인지 확인한다.
+        // 상대방이 이미 커플인지 확인한다.
+        //
 
         MemberEntity partner = memberRepository.findById(partnerId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 파트너"));
