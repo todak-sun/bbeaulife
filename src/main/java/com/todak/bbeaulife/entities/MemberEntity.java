@@ -2,11 +2,11 @@ package com.todak.bbeaulife.entities;
 
 import com.todak.bbeaulife.type.CoupleRole;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AttributeOverrides({
@@ -23,6 +23,7 @@ public class MemberEntity extends AbstractDateTimeEntity {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "MEMBER_ID")
+    @Getter
     @Id
     private Long id;
 
@@ -35,16 +36,5 @@ public class MemberEntity extends AbstractDateTimeEntity {
     @Column(name = "ROLE")
     @Enumerated(EnumType.STRING)
     private CoupleRole role;
-
-    @OneToMany
-    @JoinColumn(name = "COUPLE_MEMBER_ID")
-    private List<CoupleMemberEntity> coupleMember;
-
-    public CoupleMemberEntity relate(CoupleEntity couple) {
-        CoupleMemberEntity coupleMemberEntity = CoupleMemberEntity.create(couple, this);
-        this.coupleMember.add(coupleMemberEntity);
-        return coupleMemberEntity;
-    }
-
 
 }

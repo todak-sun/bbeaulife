@@ -24,7 +24,7 @@ public class AnniversaryEntity extends AbstractDateTimeEntity {
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name = "WHEN")
+    @Column(name = "_WHEN")
     private LocalDateTime when;
 
     @Column(name = "COUPLE_ID")
