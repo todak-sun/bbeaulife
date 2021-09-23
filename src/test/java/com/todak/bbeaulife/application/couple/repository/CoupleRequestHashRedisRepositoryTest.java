@@ -1,5 +1,6 @@
-package com.todak.bbeaulife.application.couple;
+package com.todak.bbeaulife.application.couple.repository;
 
+import com.todak.bbeaulife.application.couple.CoupleRequestHash;
 import com.todak.bbeaulife.config.WithContainer;
 import com.todak.bbeaulife.type.CoupleRole;
 import lombok.extern.slf4j.Slf4j;

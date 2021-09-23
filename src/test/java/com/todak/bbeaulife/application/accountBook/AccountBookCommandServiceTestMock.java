@@ -2,14 +2,14 @@ package com.todak.bbeaulife.application.accountBook;
 
 import com.todak.bbeaulife.application.accountBook.exception.AlreadyExistAccountBookException;
 import com.todak.bbeaulife.application.couple.Couple;
-import com.todak.bbeaulife.application.couple.Husband;
-import com.todak.bbeaulife.application.couple.Wife;
+import com.todak.bbeaulife.application.member.Member;
 import com.todak.bbeaulife.entities.AccountBookEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -39,7 +39,11 @@ class AccountBookCommandServiceTestMock {
         //given
         String accountName = "나의 가계부";
         Long coupleId = 1L;
-        Couple couple = new Couple(coupleId, new Husband(), new Wife());
+
+        Member husband = Mockito.mock(Member.class);
+        Member wife = Mockito.mock(Member.class);
+
+        Couple couple = new Couple(coupleId, husband, wife);
         AccountBookEntity accountBookEntity = AccountBookEntity.create(accountName, coupleId);
 
         given(accountBookRepository.findByCoupleId(coupleId)).willReturn(Optional.empty());
@@ -57,13 +61,16 @@ class AccountBookCommandServiceTestMock {
     @Test
     void create_fail_test() {
         //given
+        Member husband = Mockito.mock(Member.class);
+        Member wife = Mockito.mock(Member.class);
+
         given(accountBookRepository.findByCoupleId(any()))
                 .willReturn(Optional.of(AccountBookEntity.create("name", 1L)));
 
 
         //when & then
         assertThrows(AlreadyExistAccountBookException.class,
-                () -> this.accountBookCommandService.create("name", new Couple(1L, new Husband(), new Wife())));
+                () -> this.accountBookCommandService.create("name", new Couple(1L, husband, wife)));
 
         then(accountBookRepository).shouldHaveNoMoreInteractions();
 

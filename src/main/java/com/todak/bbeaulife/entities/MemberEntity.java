@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.Objects;
+
+import static com.todak.bbeaulife.type.CoupleRole.EMPTY;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AttributeOverrides({
@@ -40,14 +41,15 @@ public class MemberEntity extends AbstractDateTimeEntity {
     private MemberEntity(String email, String password) {
         this.email = email;
         this.password = password;
+        this.role = CoupleRole.EMPTY;
     }
 
     public static MemberEntity create(String email, String password) {
         return new MemberEntity(email, password);
     }
 
-    public boolean hasPartner() {
-        return Objects.nonNull(role);
+    public void roleAs(CoupleRole role) {
+        this.role = role;
     }
 
 }

@@ -1,7 +1,11 @@
 package com.todak.bbeaulife.application.couple;
 
 import com.todak.bbeaulife.application.couple.exception.CoupleMissMatchException;
-import com.todak.bbeaulife.entities.MemberEntity;
+import com.todak.bbeaulife.application.couple.repository.CoupleRepository;
+import com.todak.bbeaulife.application.couple.repository.CoupleRequestRedisRepository;
+import com.todak.bbeaulife.application.member.Member;
+import com.todak.bbeaulife.application.member.MemberApplicatoinService;
+import com.todak.bbeaulife.application.member.exception.NotFoundMemberException;
 import com.todak.bbeaulife.type.CoupleRole;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +17,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
@@ -25,14 +28,17 @@ class CoupleMatchServiceTestMock {
     CoupleMatchService coupleMatchService;
 
     @Mock
-    MemberRepository memberRepository;
+    MemberApplicatoinService memberApplicatoinService;
 
     @Mock
     CoupleRequestRedisRepository coupleRequestRedisRepository;
 
+    @Mock
+    CoupleRepository coupleRepository;
+
     @BeforeEach
     void setUp() {
-        coupleMatchService = new CoupleMatchService(memberRepository, coupleRequestRedisRepository);
+        coupleMatchService = new CoupleMatchService(coupleRepository, coupleRequestRedisRepository, memberApplicatoinService);
     }
 
     @DisplayName("Mocking으로 인스턴스 생성 테스트")
@@ -45,27 +51,27 @@ class CoupleMatchServiceTestMock {
     @Test
     void suggest_relation_success() {
         //given
-        Long myId = 1L;
-        CoupleRole myRole = CoupleRole.HUSBAND;
-        Long partnerId = 2L;
-        MemberEntity me = Mockito.mock(MemberEntity.class);
-        MemberEntity partner = Mockito.mock(MemberEntity.class);
-        CoupleRequestHash coupleRequestHash = CoupleRequestHash.create(myId, partnerId, myRole);
+        Long requesterId = 1L;
+        CoupleRole requesterRole = CoupleRole.HUSBAND;
+        Long requesteeId = 2L;
+        Member requester = Mockito.mock(Member.class);
+        Member requestee = Mockito.mock(Member.class);
+        CoupleRequestHash coupleRequestHash = CoupleRequestHash.create(requesterId, requesteeId, requesterRole);
 
-        given(me.getId()).willReturn(myId);
-        given(partner.getId()).willReturn(partnerId);
-        given(me.hasPartner()).willReturn(false);
-        given(partner.hasPartner()).willReturn(false);
+        given(requester.getId()).willReturn(requesterId);
+        given(requestee.getId()).willReturn(requesteeId);
+        given(requester.hasPartner()).willReturn(false);
+        given(requestee.hasPartner()).willReturn(false);
 
-        given(coupleRequestRedisRepository.existsById(myId)).willReturn(false);
-        given(coupleRequestRedisRepository.existsById(partnerId)).willReturn(false);
+        given(coupleRequestRedisRepository.existsById(requesterId)).willReturn(false);
+        given(coupleRequestRedisRepository.existsById(requesteeId)).willReturn(false);
         given(coupleRequestRedisRepository.save(coupleRequestHash)).willReturn(coupleRequestHash);
 
-        given(memberRepository.findById(myId)).willReturn(Optional.of(me));
-        given(memberRepository.findById(partnerId)).willReturn(Optional.of(partner));
+        given(memberApplicatoinService.getMemberById(requesterId)).willReturn(requester);
+        given(memberApplicatoinService.getMemberById(requesteeId)).willReturn(requestee);
 
         // when
-        Long timeOut = coupleMatchService.suggestRelation(myId, myRole, partnerId);
+        Long timeOut = coupleMatchService.suggestRelation(requesterId, requesterRole, requesteeId);
 
         // then
         assertEquals(Duration.ofMinutes(30L).getSeconds(), timeOut);
@@ -75,18 +81,18 @@ class CoupleMatchServiceTestMock {
     @Test
     void suggest_fail_when_requester_already_request() {
         //given
-        Long myId = 1L;
-        long partnerId = 2L;
+        Long requesterId = 1L;
+        long requesteeId = 2L;
 
-        given(coupleRequestRedisRepository.existsById(myId)).willReturn(true);
+        given(coupleRequestRedisRepository.existsById(requesterId)).willReturn(true);
 
         // when & then
-        CoupleMissMatchException coupleMissMatchException = assertThrows(CoupleMissMatchException.class, () -> {
-            coupleMatchService.suggestRelation(myId, CoupleRole.HUSBAND, partnerId);
-        }, "이미 진행중인 커플 신청이 있을 경우, 에러를 반환한다.");
+        CoupleMissMatchException coupleMissMatchException = assertThrows(CoupleMissMatchException.class,
+                () -> coupleMatchService.suggestRelation(requesterId, CoupleRole.HUSBAND, requesteeId),
+                "이미 진행중인 커플 신청이 있을 경우, 에러를 반환한다.");
 
-        assertEquals(myId, coupleMissMatchException.getRequesterId(), "신청자로 내가 뜬다.");
-        assertEquals(partnerId, coupleMissMatchException.getRequesteeId(), "피신청자로 상대방이 뜬다.");
+        assertEquals(requesterId, coupleMissMatchException.getRequesterId(), "신청자로 내가 뜬다.");
+        assertEquals(requesteeId, coupleMissMatchException.getRequesteeId(), "피신청자로 상대방이 뜬다.");
         assertEquals("이미 진행중인 커플 신청이 있습니다.", coupleMissMatchException.getMessage(), "에러메시지가 정확히 일치한다.");
     }
 
@@ -94,46 +100,117 @@ class CoupleMatchServiceTestMock {
     @Test
     void suggest_fail_when_requestee_already_request() {
         //given
-        Long myId = 1L;
-        long partnerId = 2L;
+        Long requesterId = 1L;
+        long requesteeId = 2L;
 
-        given(coupleRequestRedisRepository.existsById(myId)).willReturn(false);
-        given(coupleRequestRedisRepository.existsById(partnerId)).willReturn(true);
+        given(coupleRequestRedisRepository.existsById(requesterId)).willReturn(false);
+        given(coupleRequestRedisRepository.existsById(requesteeId)).willReturn(true);
 
         // when & then
         CoupleMissMatchException coupleMissMatchException = assertThrows(CoupleMissMatchException.class, () -> {
-            coupleMatchService.suggestRelation(myId, CoupleRole.HUSBAND, partnerId);
+            coupleMatchService.suggestRelation(requesterId, CoupleRole.HUSBAND, requesteeId);
         }, "상대방이 이미 커플 신청을 진행중이라면, 에러를 반환한다.");
 
-        assertEquals(myId, coupleMissMatchException.getRequesterId(), "신청자로 내가 뜬다.");
-        assertEquals(partnerId, coupleMissMatchException.getRequesteeId(), "피신청자로 상대방이 뜬다.");
+        assertEquals(requesterId, coupleMissMatchException.getRequesterId(), "신청자로 내가 뜬다.");
+        assertEquals(requesteeId, coupleMissMatchException.getRequesteeId(), "피신청자로 상대방이 뜬다.");
         assertEquals("상대방이 이미 커플 신청중에 있습니다.", coupleMissMatchException.getMessage(), "에러메시지가 정확히 일치한다.");
     }
 
-    @DisplayName("신청자가 커플인데 또 신청한 경우")
+    @DisplayName("신청자가 존재하지 않을 경우 실패")
+    @Test
+    void suggest_fail_when_requester_not_exist() {
+        // given
+        Long requesterId = 1L;
+        CoupleRole requesterRole = CoupleRole.HUSBAND;
+        Long requesteeId = 2L;
+
+        given(coupleRequestRedisRepository.existsById(requesterId)).willReturn(false);
+        given(coupleRequestRedisRepository.existsById(requesteeId)).willReturn(false);
+
+        given(memberApplicatoinService.getMemberById(requesterId)).willThrow(NotFoundMemberException.class);
+
+        // when & then
+        assertThrows(NotFoundMemberException.class,
+                () -> coupleMatchService.suggestRelation(requesterId, requesterRole, requesteeId),
+                "신청자가 존재하지 않을 경우, 에러 반환");
+    }
+
+    @DisplayName("피신청자가 존재하지 않을 경우 실패")
+    @Test
+    void suggest_fail_when_requestee_not_exsist() {
+        // given
+        Long requesterId = 1L;
+        CoupleRole requesterRole = CoupleRole.HUSBAND;
+        Long requesteeId = 2L;
+        Member requester = Mockito.mock(Member.class);
+
+        given(coupleRequestRedisRepository.existsById(requesterId)).willReturn(false);
+        given(coupleRequestRedisRepository.existsById(requesteeId)).willReturn(false);
+
+        given(memberApplicatoinService.getMemberById(requesterId)).willReturn(requester);
+        given(memberApplicatoinService.getMemberById(requesteeId)).willThrow(NotFoundMemberException.class);
+
+        // when & then
+        assertThrows(NotFoundMemberException.class,
+                () -> coupleMatchService.suggestRelation(requesterId, requesterRole, requesteeId),
+                "피신청자가 존재하지 않을 경우, 에러 반환");
+    }
+
+    @DisplayName("신청자가 커플인데 또 신청한 경우 실패")
     @Test
     void suggest_fail_when_requester_already_have_relationship() {
-        //given
-        Long myId = 1L;
-        CoupleRole myRole = CoupleRole.HUSBAND;
-        Long partnerId = 2L;
-        MemberEntity me = Mockito.mock(MemberEntity.class);
+        // given
+        Long requesterId = 1L;
+        CoupleRole requesterRole = CoupleRole.HUSBAND;
+        Long requesteeId = 2L;
+        Member requester = Mockito.mock(Member.class);
 
-        given(me.hasPartner()).willReturn(true);
+        given(requester.hasPartner()).willReturn(true);
 
-        given(coupleRequestRedisRepository.existsById(myId)).willReturn(false);
-        given(coupleRequestRedisRepository.existsById(partnerId)).willReturn(false);
+        given(coupleRequestRedisRepository.existsById(requesterId)).willReturn(false);
+        given(coupleRequestRedisRepository.existsById(requesteeId)).willReturn(false);
 
-        given(memberRepository.findById(myId)).willReturn(Optional.of(me));
+        given(memberApplicatoinService.getMemberById(requesterId)).willReturn(requester);
 
+        // when & then
         CoupleMissMatchException coupleMissMatchException = assertThrows(CoupleMissMatchException.class,
-                () -> coupleMatchService.suggestRelation(myId, myRole, partnerId),
+                () -> coupleMatchService.suggestRelation(requesterId, requesterRole, requesteeId),
                 "신청자가 커플인데 또 신청하면 에러를 반환한다."
         );
 
-        assertEquals(myId, coupleMissMatchException.getRequesterId(), "신청자로 내가 뜬다.");
-        assertEquals(partnerId, coupleMissMatchException.getRequesteeId(), "피신청자로 상대방이 뜬다");
+        assertEquals(requesterId, coupleMissMatchException.getRequesterId(), "신청자로 내가 뜬다.");
+        assertEquals(requesteeId, coupleMissMatchException.getRequesteeId(), "피신청자로 상대방이 뜬다");
         assertEquals("이미 커플입니다.", coupleMissMatchException.getMessage(), "메시지가 정확히 일치한다.");
+    }
+
+    @DisplayName("피신청자가 커플인데 또 신청한 경우 실패")
+    @Test
+    void suggest_fail_when_requestee_already_have_relationship() {
+        // given
+        Long requesterId = 1L;
+        CoupleRole requesterRole = CoupleRole.HUSBAND;
+        Long requesteeId = 2L;
+        Member requester = Mockito.mock(Member.class);
+        Member requestee = Mockito.mock(Member.class);
+
+        given(requester.hasPartner()).willReturn(false);
+        given(requestee.hasPartner()).willReturn(true);
+
+        given(coupleRequestRedisRepository.existsById(requesterId)).willReturn(false);
+        given(coupleRequestRedisRepository.existsById(requesteeId)).willReturn(false);
+
+        given(memberApplicatoinService.getMemberById(requesterId)).willReturn(requester);
+        given(memberApplicatoinService.getMemberById(requesteeId)).willReturn(requestee);
+
+        // when & then
+        CoupleMissMatchException coupleMissMatchException = assertThrows(CoupleMissMatchException.class,
+                () -> coupleMatchService.suggestRelation(requesterId, requesterRole, requesteeId),
+                "피신청자가 커플인데 신청하면 에러를 반환한다."
+        );
+
+        assertEquals(requesterId, coupleMissMatchException.getRequesterId(), "신청자로 내가 뜬다.");
+        assertEquals(requesteeId, coupleMissMatchException.getRequesteeId(), "피신청자로 상대방이 뜬다");
+        assertEquals("상대방이 커플입니다.", coupleMissMatchException.getMessage(), "메시지가 정확히 일치한다.");
     }
 
 

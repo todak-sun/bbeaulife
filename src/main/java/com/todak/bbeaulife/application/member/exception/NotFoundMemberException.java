@@ -1,4 +1,4 @@
-package com.todak.bbeaulife.application.couple.exception;
+package com.todak.bbeaulife.application.member.exception;
 
 import lombok.Getter;
 

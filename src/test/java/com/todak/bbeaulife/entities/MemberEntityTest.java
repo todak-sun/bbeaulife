@@ -17,7 +17,6 @@ class MemberEntityTest {
         MemberEntity memberEntity = MemberEntity.create(email, password);
         assertNotNull(memberEntity, "memberEntity는 null이 아니다");
         assertNull(memberEntity.getId(), "memberEntity를 최초 생성했을 때, ID는 존재하지 않는다.");
-        assertFalse(memberEntity.hasPartner(), "memberEntity를 최초 생성했을 때, 파트너는 존재하지 않는다.");
     }
 
 }

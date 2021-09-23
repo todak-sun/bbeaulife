@@ -2,7 +2,8 @@ package com.todak.bbeaulife.type;
 
 public enum CoupleRole {
     HUSBAND("WIFE"),
-    WIFE("HUSBAND");
+    WIFE("HUSBAND"),
+    EMPTY("EMPTY");
 
     private final String opposite;
 
