@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AttributeOverrides({
@@ -18,7 +19,6 @@ import javax.persistence.*;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "MEMBER")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class MemberEntity extends AbstractDateTimeEntity {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,5 +36,18 @@ public class MemberEntity extends AbstractDateTimeEntity {
     @Column(name = "ROLE")
     @Enumerated(EnumType.STRING)
     private CoupleRole role;
+
+    private MemberEntity(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public static MemberEntity create(String email, String password) {
+        return new MemberEntity(email, password);
+    }
+
+    public boolean hasPartner() {
+        return Objects.nonNull(role);
+    }
 
 }

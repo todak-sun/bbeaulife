@@ -21,7 +21,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
-class AccountBookCommandServiceTest {
+class AccountBookCommandServiceTestMock {
 
     @Mock
     AccountBookRepository accountBookRepository;
@@ -35,7 +35,7 @@ class AccountBookCommandServiceTest {
 
     @DisplayName("가계부를 가지고 있지 않은 유저가, 가계부를 성공적으로 만드는 테스트")
     @Test
-    public void create_test() {
+    void create_test() {
         //given
         String accountName = "나의 가계부";
         Long coupleId = 1L;
@@ -55,7 +55,7 @@ class AccountBookCommandServiceTest {
 
     @DisplayName("가계부를 이미 가진 유저가, 가계부를 추가로 만들고자 하는 경우를 테스트")
     @Test
-    public void create_fail_test() {
+    void create_fail_test() {
         //given
         given(accountBookRepository.findByCoupleId(any()))
                 .willReturn(Optional.of(AccountBookEntity.create("name", 1L)));

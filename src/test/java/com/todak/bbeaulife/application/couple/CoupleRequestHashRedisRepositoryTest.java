@@ -25,7 +25,7 @@ class CoupleRequestHashRedisRepositoryTest extends WithContainer {
     @Test
     void saveTest() {
         //given
-        CoupleRequestHash origin = CoupleRequestHash.create(1L, 1L, CoupleRole.HUSBAND);
+        CoupleRequestHash origin = CoupleRequestHash.create(1L, 2L, CoupleRole.HUSBAND);
 
         //when
         CoupleRequestHash saved = coupleRequestRedisRepository.save(origin);
