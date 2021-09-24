@@ -20,14 +20,9 @@ public class CoupleEntity extends AbstractDateTimeEntity {
 
     @Getter
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "COUPLE_ID")
     private Long id;
-
-//    @Column(name = "WIFE_ID", nullable = false)
-//    private Long wifeId;
-//
-//    @Column(name = "HUSBAND_ID", nullable = false)
-//    private Long husbandId;
 
     @Column(name = "NICK_NAME", unique = true)
     private String nickName;

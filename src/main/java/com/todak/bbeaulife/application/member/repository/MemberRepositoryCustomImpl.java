@@ -28,6 +28,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     private QMember member() {
         return new QMember(memberEntity.id,
                 memberEntity.email,
+                memberEntity.name,
                 memberEntity.role);
     }
 

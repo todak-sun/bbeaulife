@@ -62,12 +62,12 @@ public class CoupleApplicationService {
 
         CoupleEntity newCouple = coupleRepository.save(CoupleEntity.create());
 
-        Member requester = memberApplicatoinService.promoteCouple(
+        Member requester = memberApplicatoinService.promoteAsCouple(
                 founded.getRequesterId(),
                 newCouple.getId(),
                 founded.getRequesterRole());
 
-        Member requestee = memberApplicatoinService.promoteCouple(
+        Member requestee = memberApplicatoinService.promoteAsCouple(
                 founded.getRequesteeId(),
                 newCouple.getId(),
                 founded.getRequesteeRole());

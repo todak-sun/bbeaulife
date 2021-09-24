@@ -241,10 +241,10 @@ class CoupleApplicationServiceTestMock {
 
         given(coupleRepository.save(any())).willReturn(couple);
 
-        given(memberApplicatoinService.promoteCouple(coupleRequestHash.getRequesteeId(), coupleId, coupleRequestHash.getRequesteeRole()))
+        given(memberApplicatoinService.promoteAsCouple(coupleRequestHash.getRequesteeId(), coupleId, coupleRequestHash.getRequesteeRole()))
                 .willReturn(requestee);
 
-        given(memberApplicatoinService.promoteCouple(coupleRequestHash.getRequesterId(), coupleId, coupleRequestHash.getRequesterRole()))
+        given(memberApplicatoinService.promoteAsCouple(coupleRequestHash.getRequesterId(), coupleId, coupleRequestHash.getRequesterRole()))
                 .willReturn(requester);
 
         // when

@@ -25,12 +25,13 @@ public class CoupleRequestHash {
 
     @TimeToLive
     @Getter
-    private final Long timeout = Duration.ofMinutes(30L).getSeconds();
+    private Long timeout;
 
     private CoupleRequestHash(Long requesterId, Long requesteeId, CoupleRole requesterRole) {
         this.requesterId = requesterId;
         this.requesteeId = requesteeId;
         this.requesterRole = requesterRole.name();
+        this.timeout = Duration.ofMinutes(30L).getSeconds();
     }
 
     public static CoupleRequestHash create(Long requesterId, Long requesteeId, CoupleRole role) {

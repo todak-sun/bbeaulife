@@ -6,8 +6,7 @@ import com.todak.bbeaulife.type.FullName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CoupleTest {
 
@@ -35,6 +34,9 @@ class CoupleTest {
 
         //then
         assertNotNull(couple, "정상적으로 생성된다.");
+        assertEquals(coupleId, couple.getId());
+        assertEquals(wife, couple.getWife(), "입력된 아내가 그대로 나온다.");
+        assertEquals(husband, couple.getHusband(), "입력된 남편이 그대로 나온다.");
     }
 
     @Test
