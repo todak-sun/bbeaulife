@@ -20,15 +20,14 @@ public class MemberApplicatoinService {
                 .orElseThrow(() -> new NotFoundMemberException(memberId));
     }
 
-    @Transactional
-    public void relateMembers(Long requesterId, CoupleRole requesterRole, Long requesteeId) {
-        MemberEntity requester = memberRepository.findById(requesterId)
-                .orElseThrow(() -> new NotFoundMemberException(requesterId));
-        requester.roleAs(requesterRole);
 
-        MemberEntity requestee = memberRepository.findById(requesteeId)
-                .orElseThrow(() -> new NotFoundMemberException(requesteeId));
-        requestee.roleAs(requesterRole.getOpposite());
+    @Transactional
+    public Member promoteCouple(Long memberId, Long coulpleId, CoupleRole coupleRole) {
+        MemberEntity foundedMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundMemberException(memberId));
+        foundedMember.relatedAs(coulpleId, coupleRole);
+
+        return MemberResolver.resolve(foundedMember);
     }
 
 }

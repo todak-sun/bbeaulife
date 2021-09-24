@@ -1,14 +1,14 @@
 package com.todak.bbeaulife.entities;
 
 import com.todak.bbeaulife.type.CoupleRole;
+import com.todak.bbeaulife.type.FullName;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-
-import static com.todak.bbeaulife.type.CoupleRole.EMPTY;
+import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AttributeOverrides({
@@ -28,27 +28,46 @@ public class MemberEntity extends AbstractDateTimeEntity {
     @Id
     private Long id;
 
+    @Getter
     @Column(name = "EMAIL")
     private String email;
+
+    @Getter
+    @AttributeOverrides({
+            @AttributeOverride(name = "firstName", column = @Column(name = "FIRST_NAME")),
+            @AttributeOverride(name = "lastName", column = @Column(name = "LAST_NAME"))
+    })
+    @Embedded
+    private FullName name;
 
     @Column(name = "PASSWORD")
     private String password;
 
+    @Column(name = "COUPLE_ID")
+    private Long coupleId;
+
+    @Getter
     @Column(name = "ROLE")
     @Enumerated(EnumType.STRING)
     private CoupleRole role;
 
-    private MemberEntity(String email, String password) {
+    private MemberEntity(String email, String password, FullName name) {
         this.email = email;
         this.password = password;
+        this.name = name;
         this.role = CoupleRole.EMPTY;
     }
 
-    public static MemberEntity create(String email, String password) {
-        return new MemberEntity(email, password);
+    public static MemberEntity create(String email, String password, FullName name) {
+        return new MemberEntity(email, password, name);
     }
 
-    public void roleAs(CoupleRole role) {
+    public boolean isCoupleWithSomeone() {
+        return Objects.isNull(this.coupleId);
+    }
+
+    public void relatedAs(Long coupleId, CoupleRole role) {
+        this.coupleId = coupleId;
         this.role = role;
     }
 

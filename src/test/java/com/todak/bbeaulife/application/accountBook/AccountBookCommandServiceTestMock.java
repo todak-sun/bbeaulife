@@ -2,7 +2,6 @@ package com.todak.bbeaulife.application.accountBook;
 
 import com.todak.bbeaulife.application.accountBook.exception.AlreadyExistAccountBookException;
 import com.todak.bbeaulife.application.couple.Couple;
-import com.todak.bbeaulife.application.member.Member;
 import com.todak.bbeaulife.entities.AccountBookEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,14 +37,12 @@ class AccountBookCommandServiceTestMock {
     void create_test() {
         //given
         String accountName = "나의 가계부";
+
         Long coupleId = 1L;
-
-        Member husband = Mockito.mock(Member.class);
-        Member wife = Mockito.mock(Member.class);
-
-        Couple couple = new Couple(coupleId, husband, wife);
+        Couple couple = Mockito.mock(Couple.class);
         AccountBookEntity accountBookEntity = AccountBookEntity.create(accountName, coupleId);
 
+        given(couple.getId()).willReturn(coupleId);
         given(accountBookRepository.findByCoupleId(coupleId)).willReturn(Optional.empty());
         given(accountBookRepository.save(any())).willReturn(accountBookEntity);
 
@@ -61,16 +58,17 @@ class AccountBookCommandServiceTestMock {
     @Test
     void create_fail_test() {
         //given
-        Member husband = Mockito.mock(Member.class);
-        Member wife = Mockito.mock(Member.class);
+        long coupleId = 1L;
+        Couple couple = Mockito.mock(Couple.class);
 
+        given(couple.getId()).willReturn(coupleId);
         given(accountBookRepository.findByCoupleId(any()))
-                .willReturn(Optional.of(AccountBookEntity.create("name", 1L)));
+                .willReturn(Optional.of(AccountBookEntity.create("name", coupleId)));
 
 
         //when & then
         assertThrows(AlreadyExistAccountBookException.class,
-                () -> this.accountBookCommandService.create("name", new Couple(1L, husband, wife)));
+                () -> this.accountBookCommandService.create("name", couple));
 
         then(accountBookRepository).shouldHaveNoMoreInteractions();
 

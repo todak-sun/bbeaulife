@@ -6,6 +6,7 @@ import com.todak.bbeaulife.application.couple.repository.CoupleRequestRedisRepos
 import com.todak.bbeaulife.application.member.Member;
 import com.todak.bbeaulife.application.member.MemberApplicatoinService;
 import com.todak.bbeaulife.application.member.exception.NotFoundMemberException;
+import com.todak.bbeaulife.entities.CoupleEntity;
 import com.todak.bbeaulife.type.CoupleRole;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,15 +18,17 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
-class CoupleMatchServiceTestMock {
+class CoupleApplicationServiceTestMock {
 
-    CoupleMatchService coupleMatchService;
+    CoupleApplicationService coupleApplicationService;
 
     @Mock
     MemberApplicatoinService memberApplicatoinService;
@@ -38,13 +41,13 @@ class CoupleMatchServiceTestMock {
 
     @BeforeEach
     void setUp() {
-        coupleMatchService = new CoupleMatchService(coupleRepository, coupleRequestRedisRepository, memberApplicatoinService);
+        coupleApplicationService = new CoupleApplicationService(coupleRepository, coupleRequestRedisRepository, memberApplicatoinService);
     }
 
     @DisplayName("Mocking으로 인스턴스 생성 테스트")
     @Test
     void exist() {
-        assertNotNull(coupleMatchService, "mocking을 통해 인스턴스가 생성되었다.");
+        assertNotNull(coupleApplicationService, "mocking을 통해 인스턴스가 생성되었다.");
     }
 
     @DisplayName("커플제안을 정상적으로 제안하는 테스트")
@@ -71,7 +74,7 @@ class CoupleMatchServiceTestMock {
         given(memberApplicatoinService.getMemberById(requesteeId)).willReturn(requestee);
 
         // when
-        Long timeOut = coupleMatchService.suggestRelation(requesterId, requesterRole, requesteeId);
+        Long timeOut = coupleApplicationService.suggestRelation(requesterId, requesterRole, requesteeId);
 
         // then
         assertEquals(Duration.ofMinutes(30L).getSeconds(), timeOut);
@@ -88,7 +91,7 @@ class CoupleMatchServiceTestMock {
 
         // when & then
         CoupleMissMatchException coupleMissMatchException = assertThrows(CoupleMissMatchException.class,
-                () -> coupleMatchService.suggestRelation(requesterId, CoupleRole.HUSBAND, requesteeId),
+                () -> coupleApplicationService.suggestRelation(requesterId, CoupleRole.HUSBAND, requesteeId),
                 "이미 진행중인 커플 신청이 있을 경우, 에러를 반환한다.");
 
         assertEquals(requesterId, coupleMissMatchException.getRequesterId(), "신청자로 내가 뜬다.");
@@ -108,7 +111,7 @@ class CoupleMatchServiceTestMock {
 
         // when & then
         CoupleMissMatchException coupleMissMatchException = assertThrows(CoupleMissMatchException.class, () -> {
-            coupleMatchService.suggestRelation(requesterId, CoupleRole.HUSBAND, requesteeId);
+            coupleApplicationService.suggestRelation(requesterId, CoupleRole.HUSBAND, requesteeId);
         }, "상대방이 이미 커플 신청을 진행중이라면, 에러를 반환한다.");
 
         assertEquals(requesterId, coupleMissMatchException.getRequesterId(), "신청자로 내가 뜬다.");
@@ -131,7 +134,7 @@ class CoupleMatchServiceTestMock {
 
         // when & then
         assertThrows(NotFoundMemberException.class,
-                () -> coupleMatchService.suggestRelation(requesterId, requesterRole, requesteeId),
+                () -> coupleApplicationService.suggestRelation(requesterId, requesterRole, requesteeId),
                 "신청자가 존재하지 않을 경우, 에러 반환");
     }
 
@@ -152,7 +155,7 @@ class CoupleMatchServiceTestMock {
 
         // when & then
         assertThrows(NotFoundMemberException.class,
-                () -> coupleMatchService.suggestRelation(requesterId, requesterRole, requesteeId),
+                () -> coupleApplicationService.suggestRelation(requesterId, requesterRole, requesteeId),
                 "피신청자가 존재하지 않을 경우, 에러 반환");
     }
 
@@ -174,7 +177,7 @@ class CoupleMatchServiceTestMock {
 
         // when & then
         CoupleMissMatchException coupleMissMatchException = assertThrows(CoupleMissMatchException.class,
-                () -> coupleMatchService.suggestRelation(requesterId, requesterRole, requesteeId),
+                () -> coupleApplicationService.suggestRelation(requesterId, requesterRole, requesteeId),
                 "신청자가 커플인데 또 신청하면 에러를 반환한다."
         );
 
@@ -204,7 +207,7 @@ class CoupleMatchServiceTestMock {
 
         // when & then
         CoupleMissMatchException coupleMissMatchException = assertThrows(CoupleMissMatchException.class,
-                () -> coupleMatchService.suggestRelation(requesterId, requesterRole, requesteeId),
+                () -> coupleApplicationService.suggestRelation(requesterId, requesterRole, requesteeId),
                 "피신청자가 커플인데 신청하면 에러를 반환한다."
         );
 
@@ -213,5 +216,42 @@ class CoupleMatchServiceTestMock {
         assertEquals("상대방이 커플입니다.", coupleMissMatchException.getMessage(), "메시지가 정확히 일치한다.");
     }
 
+    @DisplayName("수락 성공 테스트")
+    @Test
+    void accept_success() {
+        //given
+        Long requesteeId = 1L;
+        Long requesterId = 2L;
+        Long coupleId = 1L;
+        CoupleRole requesterRole = CoupleRole.HUSBAND;
+        CoupleRequestHash coupleRequestHash = CoupleRequestHash.create(requesterId, requesteeId, requesterRole);
+
+        CoupleEntity couple = Mockito.mock(CoupleEntity.class);
+        given(couple.getId()).willReturn(coupleId);
+
+        Member requester = Mockito.mock(Member.class);
+        given(requester.hasPartner()).willReturn(true);
+        given(requester.getRole()).willReturn(requesterRole);
+
+        Member requestee = Mockito.mock(Member.class);
+        given(requestee.hasPartner()).willReturn(true);
+        given(requestee.getRole()).willReturn(requesterRole.getOpposite());
+
+        given(coupleRequestRedisRepository.findById(requesterId)).willReturn(Optional.of(coupleRequestHash));
+
+        given(coupleRepository.save(any())).willReturn(couple);
+
+        given(memberApplicatoinService.promoteCouple(coupleRequestHash.getRequesteeId(), coupleId, coupleRequestHash.getRequesteeRole()))
+                .willReturn(requestee);
+
+        given(memberApplicatoinService.promoteCouple(coupleRequestHash.getRequesterId(), coupleId, coupleRequestHash.getRequesterRole()))
+                .willReturn(requester);
+
+        // when
+        Couple result = coupleApplicationService.acceptRelation(requesteeId, requesterId);
+
+        // then
+        assertNotNull(result);
+    }
 
 }

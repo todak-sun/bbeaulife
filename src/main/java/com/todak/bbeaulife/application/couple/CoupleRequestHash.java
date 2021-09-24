@@ -21,16 +21,16 @@ public class CoupleRequestHash {
     private Long requesterId;
     @Getter
     private Long requesteeId;
-    private String role;
+    private String requesterRole;
 
     @TimeToLive
     @Getter
     private final Long timeout = Duration.ofMinutes(30L).getSeconds();
 
-    private CoupleRequestHash(Long requesterId, Long requesteeId, CoupleRole role) {
+    private CoupleRequestHash(Long requesterId, Long requesteeId, CoupleRole requesterRole) {
         this.requesterId = requesterId;
         this.requesteeId = requesteeId;
-        this.role = role.name();
+        this.requesterRole = requesterRole.name();
     }
 
     public static CoupleRequestHash create(Long requesterId, Long requesteeId, CoupleRole role) {
@@ -40,8 +40,12 @@ public class CoupleRequestHash {
         return new CoupleRequestHash(requesterId, requesteeId, role);
     }
 
-    public CoupleRole getRole() {
-        return CoupleRole.valueOf(this.role);
+    public CoupleRole getRequesterRole() {
+        return CoupleRole.valueOf(this.requesterRole);
+    }
+
+    public CoupleRole getRequesteeRole() {
+        return CoupleRole.valueOf(this.requesterRole).getOpposite();
     }
 
     @Override
@@ -49,11 +53,11 @@ public class CoupleRequestHash {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CoupleRequestHash that = (CoupleRequestHash) o;
-        return Objects.equals(requesterId, that.requesterId) && Objects.equals(requesteeId, that.requesteeId) && Objects.equals(role, that.role) && Objects.equals(timeout, that.timeout);
+        return Objects.equals(requesterId, that.requesterId) && Objects.equals(requesteeId, that.requesteeId) && Objects.equals(requesterRole, that.requesterRole) && Objects.equals(timeout, that.timeout);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requesterId, requesteeId, role, timeout);
+        return Objects.hash(requesterId, requesteeId, requesterRole, timeout);
     }
 }

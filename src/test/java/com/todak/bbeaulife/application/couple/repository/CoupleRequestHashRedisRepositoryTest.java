@@ -34,7 +34,7 @@ class CoupleRequestHashRedisRepositoryTest extends WithContainer {
         //then
         assertEquals(origin.getRequesterId(), saved.getRequesterId());
         assertEquals(origin.getRequesteeId(), saved.getRequesteeId());
-        assertEquals(origin.getRole(), saved.getRole());
+        assertEquals(origin.getRequesterRole(), saved.getRequesterRole());
 
         Long timeOut = redisTemplate.getExpire(String.join(":", "coupleRequest", saved.getRequesterId().toString()));
         assertEquals(saved.getTimeout(), timeOut);

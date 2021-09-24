@@ -1,6 +1,7 @@
 package com.todak.bbeaulife.entities;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -17,15 +18,16 @@ import java.time.LocalDate;
 @Table(name = "COUPLE")
 public class CoupleEntity extends AbstractDateTimeEntity {
 
+    @Getter
     @Id
     @Column(name = "COUPLE_ID")
     private Long id;
 
-    @Column(name = "WIFE_ID", nullable = false)
-    private Long wifeId;
-
-    @Column(name = "HUSBAND_ID", nullable = false)
-    private Long husbandId;
+//    @Column(name = "WIFE_ID", nullable = false)
+//    private Long wifeId;
+//
+//    @Column(name = "HUSBAND_ID", nullable = false)
+//    private Long husbandId;
 
     @Column(name = "NICK_NAME", unique = true)
     private String nickName;
@@ -35,5 +37,9 @@ public class CoupleEntity extends AbstractDateTimeEntity {
 
     @Column(name = "DECLARATION_DATE_OF_MARRIAGE")
     private LocalDate declarationDateOfMarriage;
+
+    public static CoupleEntity create() {
+        return new CoupleEntity();
+    }
 
 }

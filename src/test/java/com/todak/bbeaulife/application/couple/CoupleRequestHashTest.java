@@ -23,7 +23,7 @@ public class CoupleRequestHashTest {
 
         assertEquals(requesterId, coupleRequestHash.getRequesterId(), "요청자가 동일하게 들어간다.");
         assertEquals(requesteeId, coupleRequestHash.getRequesteeId(), "피요청자가 동일하게 들어간다.");
-        assertEquals(role, coupleRequestHash.getRole(), "역할이 동일하게 들어간다");
+        assertEquals(role, coupleRequestHash.getRequesterRole(), "역할이 동일하게 들어간다");
         assertEquals(Duration.ofMinutes(30L).getSeconds(), coupleRequestHash.getTimeout(), "30분의 TTL을 가진다.");
     }
 
