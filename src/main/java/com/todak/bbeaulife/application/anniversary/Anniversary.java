@@ -10,6 +10,4 @@ public class Anniversary {
 
     private String description;
 
-
-
 }
