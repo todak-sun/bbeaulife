@@ -17,6 +17,10 @@ public class MemberApplicatoinService {
 
     private final MemberRepository memberRepository;
 
+    public boolean exsistById(Long memberId) {
+        return memberRepository.existsById(memberId);
+    }
+
     public Member getMemberById(Long memberId) {
         return memberRepository.findMemberById(memberId)
                 .orElseThrow(() -> new NotFoundMemberException(memberId));
