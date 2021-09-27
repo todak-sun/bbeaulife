@@ -21,6 +21,10 @@ public class MemberApplicatoinService {
         return memberRepository.existsById(memberId);
     }
 
+    public boolean isMatchedCouple(Long memberId, Long coupleId) {
+        return memberRepository.existsByIdAndCoupleId(memberId, coupleId);
+    }
+
     public Member getMemberById(Long memberId) {
         return memberRepository.findMemberById(memberId)
                 .orElseThrow(() -> new NotFoundMemberException(memberId));
@@ -44,6 +48,11 @@ public class MemberApplicatoinService {
     public Member promoteAsCouple(Long memberId, Long coulpleId, CoupleRole coupleRole) {
         MemberEntity foundedMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberException(memberId));
+
+        if (foundedMember.hasRelactionship()) {
+            throw new RuntimeException("이미 커플입니다.");
+        }
+
         foundedMember.relatedAs(coulpleId, coupleRole);
 
         return MemberResolver.resolve(foundedMember);

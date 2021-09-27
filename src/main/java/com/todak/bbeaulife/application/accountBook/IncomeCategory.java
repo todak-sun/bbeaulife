@@ -24,20 +24,12 @@ public enum IncomeCategory {
 
     public static List<String> fetchAllCategories() {
         return Arrays.stream(values())
-                .flatMap(lv0 -> lv0.childrens.stream().map(lv1 -> String.join(" > ", lv0.description, lv1.description)))
+                .flatMap(lv0 -> lv0.childrens.stream().map(lv1 -> String.join(" > ", lv0.description, lv1.getDescription())))
                 .collect(Collectors.toList());
     }
 
-
-    @RequiredArgsConstructor
-    public enum IncomeCategoryLevel1 {
-        MONTHLY_PATCHECK("월급"),
-        BOUNS("상여"),
-        DIVIDEND("배당"),
-        INTEREST("이자"),
-        ETC("기타");
-
-        private final String description;
+    public boolean contains(IncomeCategoryLevel1 lv1) {
+        return this.childrens.contains(lv1);
     }
 
 

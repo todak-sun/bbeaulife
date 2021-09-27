@@ -1,26 +1,26 @@
 package com.todak.bbeaulife.application.accountBook;
 
-import com.todak.bbeaulife.application.couple.Couple;
 import lombok.Getter;
 
 import java.util.List;
 
 public class AccountBook {
 
-    private Long id;
+    @Getter
+    private final Long id;
 
     @Getter
-    private String name;
+    private final String name;
 
     @Getter
-    private Couple couple;
+    private final Long coupleId;
 
     private List<AccountBookHistory> accountBookHistories;
-    
-    public AccountBook(Long id, String name, Couple couple) {
+
+    public AccountBook(Long id, String name, Long coupleId) {
         this.id = id;
         this.name = name;
-        this.couple = couple;
+        this.coupleId = coupleId;
     }
 
 }

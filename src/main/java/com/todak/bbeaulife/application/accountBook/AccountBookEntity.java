@@ -1,10 +1,15 @@
-package com.todak.bbeaulife.entities;
+package com.todak.bbeaulife.application.accountBook;
 
+import com.todak.bbeaulife.entities.AbstractDateTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AttributeOverrides({
@@ -18,6 +23,7 @@ import javax.persistence.*;
 public class AccountBookEntity extends AbstractDateTimeEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     @Column(name = "ACCOUNT_BOOK_ID")
     private Long id;
@@ -29,6 +35,14 @@ public class AccountBookEntity extends AbstractDateTimeEntity {
     @Getter
     @Column(name = "COUPLE_ID", unique = true)
     private Long coupleId;
+
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @OneToMany(mappedBy = "accountBook")
+    private List<AccountBookHistoryEntity> histories = new ArrayList<>();
+
+    public void writeIncome(long amount, IncomeCategory incomeCategory, IncomeCategoryLevel1 incomeCategoryLevel1, String description, LocalDate occuredDateTime, Long writtenBy) {
+        this.histories.add(AccountBookHistoryEntity.income(amount, incomeCategory, incomeCategoryLevel1, description, occuredDateTime, writtenBy, this));
+    }
 
     public static AccountBookEntity create(String name, Long coupleId) {
         AccountBookEntity entity = new AccountBookEntity();

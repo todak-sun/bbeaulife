@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Slf4j
 @ActiveProfiles("test")
 @SpringBootTest
-public class CoupleApplicationServiceUnionTest extends WithContainer {
+public class CoupleApplicationServiceTestUnion extends WithContainer {
 
     @Autowired
     CoupleApplicationService coupleApplicationService;

@@ -62,8 +62,8 @@ public class MemberEntity extends AbstractDateTimeEntity {
         return new MemberEntity(email, password, name);
     }
 
-    public boolean isCoupleWithSomeone() {
-        return Objects.isNull(this.coupleId);
+    public boolean hasRelactionship() {
+        return Objects.nonNull(this.coupleId);
     }
 
     public void relatedAs(Long coupleId, CoupleRole role) {

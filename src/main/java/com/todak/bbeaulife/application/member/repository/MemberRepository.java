@@ -7,4 +7,6 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long>, Mem
 
     boolean existsByEmail(String email);
 
+    boolean existsByIdAndCoupleId(Long memberId, Long coupleId);
+
 }
