@@ -66,4 +66,12 @@ public class AccountBookHistoryEntity extends AbstractDateTimeEntity {
         return new AccountBookHistoryEntity(MoneyFlow.INCOME, amount, incomeCategory, incomeCategoryLevel1, description, occuredDateTime, writtenBy, accountBook);
     }
 
+    public void modify(long amount, String description, IncomeCategory incomeCategory, IncomeCategoryLevel1 incomeCategoryLevel1, LocalDate occuredDateTime, Long writerId) {
+        this.amount = amount;
+        this.description = description;
+        this.incomeCategory = incomeCategory;
+        this.incomeCategoryLevel1 = incomeCategoryLevel1;
+        this.occuredDateTime = occuredDateTime;
+        this.writtenBy = writerId;
+    }
 }

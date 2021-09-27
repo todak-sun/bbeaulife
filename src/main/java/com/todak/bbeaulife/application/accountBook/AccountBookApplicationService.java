@@ -1,6 +1,7 @@
 package com.todak.bbeaulife.application.accountBook;
 
 import com.todak.bbeaulife.application.accountBook.exception.AlreadyExistAccountBookException;
+import com.todak.bbeaulife.application.accountBook.repository.AccountBookHistoryRepository;
 import com.todak.bbeaulife.application.accountBook.repository.AccountBookRepository;
 import com.todak.bbeaulife.application.member.MemberApplicatoinService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
 public class AccountBookApplicationService {
 
     private final AccountBookRepository accountBookRepository;
-
+    private final AccountBookHistoryRepository accountBookHistoryRepository;
     private final MemberApplicatoinService memberApplicatoinService;
 
     @Transactional
@@ -48,11 +49,11 @@ public class AccountBookApplicationService {
         }
 
         accountBook.writeIncome(
-                dto.getAmount(),
-                dto.getIncomeCategory(),
-                dto.getIncomeCategoryLevel1(),
-                dto.getDescription(),
-                dto.getOccuredDateTime(),
+                dto.amount(),
+                dto.incomeCategory(),
+                dto.incomeCategoryLevel1(),
+                dto.description(),
+                dto.occuredDateTime(),
                 writerId
         );
     }
@@ -68,13 +69,33 @@ public class AccountBookApplicationService {
         }
 
         for (IncomeDto dto : dtos) {
-            accountBook.writeIncome(dto.getAmount(),
-                    dto.getIncomeCategory(),
-                    dto.getIncomeCategoryLevel1(),
-                    dto.getDescription(),
-                    dto.getOccuredDateTime(),
+            accountBook.writeIncome(
+                    dto.amount(),
+                    dto.incomeCategory(),
+                    dto.incomeCategoryLevel1(),
+                    dto.description(),
+                    dto.occuredDateTime(),
                     writerId);
         }
+    }
+
+    @Transactional
+    public void modifyIncomeHistory(Long accountBookHistoryId, IncomeDto dto, Long writerId) {
+        AccountBookHistoryEntity accountBookHistory = accountBookHistoryRepository.findById(accountBookHistoryId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 내역"));
+
+        accountBookHistory
+                .modify(dto.amount(),
+                        dto.description(),
+                        dto.incomeCategory(),
+                        dto.incomeCategoryLevel1(),
+                        dto.occuredDateTime(),
+                        writerId);
+    }
+
+    @Transactional
+    public void deleteHistory(Long accountBookHistoryId) {
+        accountBookHistoryRepository.deleteById(accountBookHistoryId);
     }
 
     @Transactional

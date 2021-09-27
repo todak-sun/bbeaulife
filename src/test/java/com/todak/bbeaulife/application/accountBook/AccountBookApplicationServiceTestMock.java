@@ -1,6 +1,7 @@
 package com.todak.bbeaulife.application.accountBook;
 
 import com.todak.bbeaulife.application.accountBook.exception.AlreadyExistAccountBookException;
+import com.todak.bbeaulife.application.accountBook.repository.AccountBookHistoryRepository;
 import com.todak.bbeaulife.application.accountBook.repository.AccountBookRepository;
 import com.todak.bbeaulife.application.member.MemberApplicatoinService;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,13 +26,20 @@ class AccountBookApplicationServiceTestMock {
     AccountBookRepository accountBookRepository;
 
     @Mock
+    AccountBookHistoryRepository accountBookHistoryRepository;
+
+    @Mock
     MemberApplicatoinService memberApplicatoinService;
 
     AccountBookApplicationService accountBookApplicationService;
 
     @BeforeEach
     void setUp() {
-        this.accountBookApplicationService = new AccountBookApplicationService(accountBookRepository, memberApplicatoinService);
+        this.accountBookApplicationService = new AccountBookApplicationService(
+                accountBookRepository,
+                accountBookHistoryRepository,
+                memberApplicatoinService
+        );
     }
 
     @DisplayName("가계부를 가지고 있지 않은 유저가, 가계부를 성공적으로 만드는 테스트")
