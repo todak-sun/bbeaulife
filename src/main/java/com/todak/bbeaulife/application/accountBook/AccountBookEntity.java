@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -36,7 +37,7 @@ public class AccountBookEntity extends AbstractDateTimeEntity {
     @Column(name = "COUPLE_ID", unique = true)
     private Long coupleId;
 
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @Cascade(CascadeType.ALL)
     @OneToMany(mappedBy = "accountBook")
     private List<AccountBookHistoryEntity> histories = new ArrayList<>();
 
