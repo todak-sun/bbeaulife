@@ -8,4 +8,6 @@ public interface MemberRepositoryCustom {
 
     Optional<Member> findMemberById(Long id);
 
+    Optional<Member> findMemberByCoupleIdAndPartnerId(Long memberId, Long coupleId);
+
 }

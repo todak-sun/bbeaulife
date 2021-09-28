@@ -1,16 +1,17 @@
 package com.todak.bbeaulife.application.couple;
 
+import com.todak.bbeaulife.application.couple.repository.CoupleRepository;
 import com.todak.bbeaulife.application.member.Member;
 import com.todak.bbeaulife.application.member.MemberApplicatoinService;
+import com.todak.bbeaulife.application.member.repository.MemberRepository;
 import com.todak.bbeaulife.config.WithContainer;
 import com.todak.bbeaulife.type.CoupleRole;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -18,52 +19,74 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Slf4j
 @ActiveProfiles("test")
 @SpringBootTest
-public class CoupleApplicationServiceTestUnion extends WithContainer {
+class CoupleApplicationServiceTestUnion extends WithContainer {
 
     @Autowired
     CoupleApplicationService coupleApplicationService;
     @Autowired
     MemberApplicatoinService memberApplicatoinService;
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    CoupleRepository coupleRepository;
+    @Autowired
+    MemberRepository memberRepository;
+
+    @AfterEach
+    void afterEach() {
+        coupleRepository.deleteAll();
+        memberRepository.deleteAll();
+    }
 
 
     @Test
-    public void success_and_accept() throws JsonProcessingException {
-        String requesterEmail = "requester@email.com";
-        String requesterPassword = "requester-password";
-        String requesterFirstName = "requesterFirst";
-        String requesterLastName = "requesterLast";
+    void success_and_accept() {
+        Member wife = createWife();
+        Member husband = createHusband();
 
-        String requesteeEmail = "requestee@email.com";
-        String requesteePassword = "requestee-password";
-        String requesteeFirstName = "requesteeFirst";
-        String requesteeLastName = "requesteeLast";
-
-        Member requester = memberApplicatoinService.createMember(requesterEmail, requesterPassword, requesterFirstName, requesterLastName);
-        Member requestee = memberApplicatoinService.createMember(requesteeEmail, requesteePassword, requesteeFirstName, requesteeLastName);
-
-        Long timeOut = coupleApplicationService.suggestRelation(requester.getId(), CoupleRole.WIFE, requestee.getId());
-
-        Couple couple = coupleApplicationService.acceptRelation(requestee.getId(), requester.getId());
+        Long timeOut = coupleApplicationService.suggestRelation(wife.getId(), CoupleRole.WIFE, husband.getId());
+        Couple couple = coupleApplicationService.acceptRelation(husband.getId(), wife.getId());
 
         assertNotNull(timeOut);
         assertNotNull(couple);
-        assertNotNull(couple.getId());
 
+        assertNotNull(couple.getId());
         assertNotNull(couple.getWife());
+
         assertEquals(CoupleRole.WIFE, couple.getWife().getRole());
-        assertEquals(requester.getId(), couple.getWife().getId());
-        assertEquals(requester.getEmail(), couple.getWife().getEmail());
+        assertEquals(wife.getId(), couple.getWife().getId());
+        assertEquals(wife.getEmail(), couple.getWife().getEmail());
 
 
         assertNotNull(couple.getHusband());
         assertEquals(CoupleRole.HUSBAND, couple.getHusband().getRole());
-        assertEquals(requestee.getId(), couple.getHusband().getId());
-        assertEquals(requestee.getEmail(), couple.getHusband().getEmail());
+        assertEquals(husband.getId(), couple.getHusband().getId());
+        assertEquals(husband.getEmail(), couple.getHusband().getEmail());
 
-        String s = objectMapper.writeValueAsString(couple);
-        log.info("s : {}", s);
     }
 
+    @Test
+    void fetch_couple_test() {
+        // given
+        Member husband = createHusband();
+        Member wife = createWife();
+
+        coupleApplicationService.suggestRelation(husband.getId(), CoupleRole.HUSBAND, wife.getId());
+        Couple newCouple = coupleApplicationService.acceptRelation(wife.getId(), husband.getId());
+
+        // when
+        Couple fetchedCouple = coupleApplicationService.fetchCouple(husband.getId());
+
+        // then
+        assertEquals(newCouple.getId(), fetchedCouple.getId(), "커플의 id가 일치한다.");
+        assertEquals(wife.getId(), fetchedCouple.getWife().getId(), "정확히 wife의 정보가 나온다.");
+        assertEquals(husband.getId(), fetchedCouple.getHusband().getId(), "정확히 husband의 정보가 나온다.");
+    }
+
+    private Member createWife() {
+        return memberApplicatoinService.createMember("wife@email.com", "wife-password", "wife-first", "wife-last");
+    }
+
+    private Member createHusband() {
+        return memberApplicatoinService.createMember("husband@email.com", "husband-password", "husband-first", "husband-last");
+    }
 }

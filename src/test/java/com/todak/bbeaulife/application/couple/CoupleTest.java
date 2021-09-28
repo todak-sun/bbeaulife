@@ -22,13 +22,15 @@ class CoupleTest {
                 1L,
                 "email@email.com",
                 FullName.called("firstName1", "lastName1"),
-                CoupleRole.WIFE);
+                CoupleRole.WIFE,
+                coupleId);
 
         Member husband = new Member(
                 2L,
                 "email@email.com",
                 FullName.called("firstName1", "lastName1"),
-                CoupleRole.HUSBAND);
+                CoupleRole.HUSBAND,
+                coupleId);
         //when
         Couple couple = Couple.create(coupleId, wife, husband);
 
@@ -49,12 +51,14 @@ class CoupleTest {
                 1L,
                 "email@email.com",
                 FullName.called("firstName1", "lastName1"),
-                CoupleRole.WIFE);
+                CoupleRole.WIFE,
+                coupleId);
 
         Member memberHavingNoRole = new Member(
                 2L,
                 "email@email.com",
                 FullName.called("firstName1", "lastName1"),
+                null,
                 null);
 
         // when & then
@@ -77,13 +81,15 @@ class CoupleTest {
                 1L,
                 "email@email.com",
                 FullName.called("firstName1", "lastName1"),
-                CoupleRole.WIFE);
+                CoupleRole.WIFE,
+                coupleId);
 
         Member wifeB = new Member(
                 2L,
                 "email@email.com",
                 FullName.called("firstName1", "lastName1"),
-                CoupleRole.WIFE);
+                CoupleRole.WIFE,
+                coupleId);
 
         // when & then
         assertThrows(RuntimeException.class,
@@ -95,13 +101,15 @@ class CoupleTest {
                 1L,
                 "email@email.com",
                 FullName.called("firstName1", "lastName1"),
-                CoupleRole.WIFE);
+                CoupleRole.WIFE,
+                coupleId);
 
         Member husbandB = new Member(
                 2L,
                 "email@email.com",
                 FullName.called("firstName1", "lastName1"),
-                CoupleRole.WIFE);
+                CoupleRole.WIFE,
+                coupleId);
 
         // when & then
         assertThrows(RuntimeException.class,

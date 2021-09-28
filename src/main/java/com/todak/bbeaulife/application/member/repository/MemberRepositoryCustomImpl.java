@@ -25,11 +25,23 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         return Optional.ofNullable(member);
     }
 
+    @Override
+    public Optional<Member> findMemberByCoupleIdAndPartnerId(Long memberId, Long coupleId) {
+        Member member = qf.select(member())
+                .from(memberEntity)
+                .where(
+                        memberEntity.coupleId.eq(coupleId),
+                        memberEntity.id.ne(memberId)
+                ).fetchOne();
+        return Optional.ofNullable(member);
+    }
+
     private QMember member() {
         return new QMember(memberEntity.id,
                 memberEntity.email,
                 memberEntity.name,
-                memberEntity.role);
+                memberEntity.role,
+                memberEntity.coupleId);
     }
 
 }

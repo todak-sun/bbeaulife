@@ -13,6 +13,7 @@ public class Member {
 
     @Getter
     private final Long id;
+
     @Getter
     private final String email;
 
@@ -21,13 +22,17 @@ public class Member {
     @Getter
     private final CoupleRole role;
 
+    @Getter
+    private final Long coupleId;
+
 
     @QueryProjection
-    public Member(Long id, String email, FullName name, CoupleRole role) {
+    public Member(Long id, String email, FullName name, CoupleRole role, Long coupleId) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.role = Objects.requireNonNullElse(role, EMPTY);
+        this.coupleId = coupleId;
     }
 
     public boolean hasPartner() {

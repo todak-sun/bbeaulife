@@ -43,6 +43,7 @@ public class MemberEntity extends AbstractDateTimeEntity {
     @Column(name = "PASSWORD")
     private String password;
 
+    @Getter
     @Column(name = "COUPLE_ID")
     private Long coupleId;
 

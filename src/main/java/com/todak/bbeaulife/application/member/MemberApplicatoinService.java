@@ -30,6 +30,12 @@ public class MemberApplicatoinService {
                 .orElseThrow(() -> new NotFoundMemberException(memberId));
     }
 
+    public Member getPartner(Long memberId, Long coupleId) {
+        return memberRepository.findMemberByCoupleIdAndPartnerId(memberId, coupleId)
+                .orElseThrow(() -> new RuntimeException("파트너가 없음"));
+    }
+
+
     @Transactional
     public Member createMember(String email, String password, String firstName, String lastName) {
 

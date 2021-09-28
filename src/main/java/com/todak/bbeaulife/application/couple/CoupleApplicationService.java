@@ -20,6 +20,19 @@ public class CoupleApplicationService {
     private final CoupleRequestRedisRepository coupleRequestRedisRepository;
     private final MemberApplicatoinService memberApplicatoinService;
 
+    public Couple fetchCouple(Long memberId) {
+        Member memberA = memberApplicatoinService.getMemberById(memberId);
+        if (!memberA.hasPartner()) {
+            throw new RuntimeException("커플이 아님");
+        }
+
+        CoupleEntity coupleEntity = coupleRepository.findById(memberA.getCoupleId())
+                .orElseThrow(() -> new RuntimeException("이건 큰 문제다. 정합성이 안맞는다."));
+
+        Member memberB = memberApplicatoinService.getPartner(memberA.getId(), coupleEntity.getId());
+
+        return Couple.create(coupleEntity.getId(), memberA, memberB);
+    }
 
     public Long suggestRelation(Long requesterId, CoupleRole requesterRole, Long requesteeId) {
 
