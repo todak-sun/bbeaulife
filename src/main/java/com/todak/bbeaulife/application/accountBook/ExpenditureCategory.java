@@ -3,7 +3,7 @@ package com.todak.bbeaulife.application.accountBook;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum ExpenditureCetory {
+public enum ExpenditureCategory {
     APPAREL("의류비"),
     FOOD("식비"),
     HOUSING("주거비"),

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum PaymentType {
-    CACH("현금"),
+    CASH("현금"),
     CARD("카드");
 
     private final String description;
