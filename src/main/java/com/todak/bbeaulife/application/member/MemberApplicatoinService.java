@@ -18,7 +18,7 @@ public class MemberApplicatoinService {
     private final MemberRepository memberRepository;
 
     public boolean exsistById(Long memberId) {
-        return memberRepository.existsById(memberId);
+        return memberRepository.existsByIdAndActivatedTrue(memberId);
     }
 
     public boolean isMatchedCouple(Long memberId, Long coupleId) {
@@ -35,6 +35,12 @@ public class MemberApplicatoinService {
                 .orElseThrow(() -> new RuntimeException("파트너가 없음"));
     }
 
+    @Transactional
+    public void withdrawal(Long memberId) {
+        MemberEntity memberEntity = memberRepository.findByIdAndActivatedTrue(memberId)
+                .orElseThrow(() -> new NotFoundMemberException(memberId));
+        memberEntity.deactivate();
+    }
 
     @Transactional
     public Member createMember(String email, String password, String firstName, String lastName) {

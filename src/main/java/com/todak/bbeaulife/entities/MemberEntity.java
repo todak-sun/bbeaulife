@@ -52,11 +52,19 @@ public class MemberEntity extends AbstractDateTimeEntity {
     @Enumerated(EnumType.STRING)
     private CoupleRole role;
 
+    @Column(name = "IS_ACTIVE")
+    private boolean activated;
+
+    public void deactivate() {
+        this.activated = false;
+    }
+
     private MemberEntity(String email, String password, FullName name) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = CoupleRole.EMPTY;
+        this.activated = true;
     }
 
     public static MemberEntity create(String email, String password, FullName name) {

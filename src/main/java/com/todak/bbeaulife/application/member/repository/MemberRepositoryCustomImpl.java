@@ -1,5 +1,6 @@
 package com.todak.bbeaulife.application.member.repository;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.todak.bbeaulife.application.member.Member;
 import com.todak.bbeaulife.application.member.QMember;
@@ -16,12 +17,10 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
     @Override
     public Optional<Member> findMemberById(Long id) {
-
         Member member = qf.select(member())
                 .from(memberEntity)
-                .where(memberEntity.id.eq(id))
+                .where(memberEntity.id.eq(id), activeMember())
                 .fetchOne();
-
         return Optional.ofNullable(member);
     }
 
@@ -31,7 +30,8 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                 .from(memberEntity)
                 .where(
                         memberEntity.coupleId.eq(coupleId),
-                        memberEntity.id.ne(memberId)
+                        memberEntity.id.ne(memberId),
+                        activeMember()
                 ).fetchOne();
         return Optional.ofNullable(member);
     }
@@ -42,6 +42,10 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                 memberEntity.name,
                 memberEntity.role,
                 memberEntity.coupleId);
+    }
+
+    private BooleanExpression activeMember() {
+        return memberEntity.activated.isTrue();
     }
 
 }
