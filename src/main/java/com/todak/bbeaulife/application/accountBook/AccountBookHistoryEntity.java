@@ -14,64 +14,39 @@ import java.time.LocalDate;
         @AttributeOverride(name = "updateDateTime",
                 column = @Column(name = "UPDATED_DATE_TIME"))
 })
+@DiscriminatorColumn(name = "FLOW", discriminatorType = DiscriminatorType.STRING)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 @Table(name = "ACCOUNT_BOOK_HISTORY")
-public class AccountBookHistoryEntity extends AbstractDateTimeEntity {
+public abstract class AccountBookHistoryEntity extends AbstractDateTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ACCOUT_BOOK_HISTORY_ID")
-    private Long id;
-
-    @Column(name = "FLOW")
-    @Enumerated(EnumType.STRING)
-    private MoneyFlow flow;
+    protected Long id;
 
     @Column(name = "AMOUNT")
-    private long amount;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "INCOME_CATEGORY")
-    private IncomeCategory incomeCategory;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "INCOME_CATEGORY_LV1")
-    private IncomeCategoryLevel1 incomeCategoryLevel1;
+    protected long amount;
 
     @Column(name = "DESCRIPTION")
-    private String description;
+    protected String description;
 
     @Column(name = "OCCURED_DATE_TIME")
-    private LocalDate occuredDateTime;
+    protected LocalDate occuredDateTime;
 
     @Column(name = "WRITER_ID")
-    private Long writtenBy;
+    protected Long writtenBy;
 
     @JoinColumn(name = "ACCOUNT_BOOK_ID")
     @ManyToOne(fetch = FetchType.LAZY)
-    private AccountBookEntity accountBook;
+    protected AccountBookEntity accountBook;
 
-    private AccountBookHistoryEntity(MoneyFlow moneyFlow, long amount, IncomeCategory incomeCategory, IncomeCategoryLevel1 incomeCategoryLevel1, String description, LocalDate occuredDateTime, Long writtenBy, AccountBookEntity accountBook) {
-        this.flow = moneyFlow;
+    protected AccountBookHistoryEntity(long amount, String description, LocalDate occuredDateTime, Long writtenBy, AccountBookEntity accountBook) {
         this.amount = amount;
-        this.incomeCategory = incomeCategory;
-        this.incomeCategoryLevel1 = incomeCategoryLevel1;
         this.description = description;
         this.occuredDateTime = occuredDateTime;
         this.writtenBy = writtenBy;
         this.accountBook = accountBook;
     }
 
-    public static AccountBookHistoryEntity income(long amount, IncomeCategory incomeCategory, IncomeCategoryLevel1 incomeCategoryLevel1, String description, LocalDate occuredDateTime, Long writtenBy, AccountBookEntity accountBook) {
-        return new AccountBookHistoryEntity(MoneyFlow.INCOME, amount, incomeCategory, incomeCategoryLevel1, description, occuredDateTime, writtenBy, accountBook);
-    }
-
-    public void modify(long amount, String description, IncomeCategory incomeCategory, IncomeCategoryLevel1 incomeCategoryLevel1, LocalDate occuredDateTime, Long writerId) {
-        this.amount = amount;
-        this.description = description;
-        this.incomeCategory = incomeCategory;
-        this.incomeCategoryLevel1 = incomeCategoryLevel1;
-        this.occuredDateTime = occuredDateTime;
-        this.writtenBy = writerId;
-    }
 }

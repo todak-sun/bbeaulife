@@ -42,7 +42,7 @@ public class AccountBookEntity extends AbstractDateTimeEntity {
     private List<AccountBookHistoryEntity> histories = new ArrayList<>();
 
     public void writeIncome(long amount, IncomeCategory incomeCategory, IncomeCategoryLevel1 incomeCategoryLevel1, String description, LocalDate occuredDateTime, Long writtenBy) {
-        this.histories.add(AccountBookHistoryEntity.income(amount, incomeCategory, incomeCategoryLevel1, description, occuredDateTime, writtenBy, this));
+        this.histories.add(AccountBookIncomeHistoryEntity.create(amount, incomeCategory, incomeCategoryLevel1, description, occuredDateTime, writtenBy, this));
     }
 
     public static AccountBookEntity create(String name, Long coupleId) {
