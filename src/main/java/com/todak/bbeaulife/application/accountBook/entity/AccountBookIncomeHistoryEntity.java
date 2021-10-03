@@ -1,12 +1,19 @@
-package com.todak.bbeaulife.application.accountBook;
+package com.todak.bbeaulife.application.accountBook.entity;
+
+import com.todak.bbeaulife.application.accountBook.IncomeCategory;
+import com.todak.bbeaulife.application.accountBook.IncomeCategoryLevel1;
+import com.todak.bbeaulife.application.accountBook.MoneyFlow;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DiscriminatorValue(value = MoneyFlow.Values.INCOME)
 @Entity
 @Table(name = "ACCOUNT_BOOK_INCOME_HISTORY")
-@DiscriminatorValue(value = MoneyFlow.Values.INCOME)
 public class AccountBookIncomeHistoryEntity extends AccountBookHistoryEntity {
 
     @Enumerated(EnumType.STRING)
@@ -23,7 +30,7 @@ public class AccountBookIncomeHistoryEntity extends AccountBookHistoryEntity {
         this.incomeCategoryLevel1 = incomeCategoryLevel1;
     }
 
-    public static AccountBookIncomeHistoryEntity create(long amount, IncomeCategory incomeCategory, IncomeCategoryLevel1 incomeCategoryLevel1, String description, LocalDate occuredDateTime, Long writtenBy, AccountBookEntity accountBook){
+    public static AccountBookIncomeHistoryEntity create(long amount, IncomeCategory incomeCategory, IncomeCategoryLevel1 incomeCategoryLevel1, String description, LocalDate occuredDateTime, Long writtenBy, AccountBookEntity accountBook) {
         return new AccountBookIncomeHistoryEntity(amount, incomeCategory, incomeCategoryLevel1, description, occuredDateTime, writtenBy, accountBook);
     }
 

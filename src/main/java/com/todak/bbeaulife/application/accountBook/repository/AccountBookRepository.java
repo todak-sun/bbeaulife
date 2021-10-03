@@ -1,6 +1,6 @@
 package com.todak.bbeaulife.application.accountBook.repository;
 
-import com.todak.bbeaulife.application.accountBook.AccountBookEntity;
+import com.todak.bbeaulife.application.accountBook.entity.AccountBookEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

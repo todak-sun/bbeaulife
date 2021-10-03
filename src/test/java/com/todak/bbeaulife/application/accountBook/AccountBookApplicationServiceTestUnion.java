@@ -1,5 +1,6 @@
 package com.todak.bbeaulife.application.accountBook;
 
+import com.todak.bbeaulife.application.accountBook.entity.AccountBookEntity;
 import com.todak.bbeaulife.application.accountBook.repository.AccountBookRepository;
 import com.todak.bbeaulife.application.couple.Couple;
 import com.todak.bbeaulife.application.couple.CoupleApplicationService;
@@ -95,7 +96,7 @@ class AccountBookApplicationServiceTestUnion extends WithContainer {
         accountBookApplicationService.writeIncome(
                 accountBook.getId(),
                 dto,
-                1L
+                couple.getHusband().getId()
         );
 
         //then

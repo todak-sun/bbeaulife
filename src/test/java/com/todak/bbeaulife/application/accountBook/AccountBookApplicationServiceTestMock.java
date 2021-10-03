@@ -1,7 +1,9 @@
 package com.todak.bbeaulife.application.accountBook;
 
+import com.todak.bbeaulife.application.accountBook.entity.AccountBookEntity;
 import com.todak.bbeaulife.application.accountBook.exception.AlreadyExistAccountBookException;
 import com.todak.bbeaulife.application.accountBook.repository.AccountBookHistoryRepository;
+import com.todak.bbeaulife.application.accountBook.repository.AccountBookIncomeHistoryRepository;
 import com.todak.bbeaulife.application.accountBook.repository.AccountBookRepository;
 import com.todak.bbeaulife.application.member.MemberApplicatoinService;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +31,9 @@ class AccountBookApplicationServiceTestMock {
     AccountBookHistoryRepository accountBookHistoryRepository;
 
     @Mock
+    AccountBookIncomeHistoryRepository accountBookIncomeHistoryRepository;
+
+    @Mock
     MemberApplicatoinService memberApplicatoinService;
 
     AccountBookApplicationService accountBookApplicationService;
@@ -38,6 +43,7 @@ class AccountBookApplicationServiceTestMock {
         this.accountBookApplicationService = new AccountBookApplicationService(
                 accountBookRepository,
                 accountBookHistoryRepository,
+                accountBookIncomeHistoryRepository,
                 memberApplicatoinService
         );
     }

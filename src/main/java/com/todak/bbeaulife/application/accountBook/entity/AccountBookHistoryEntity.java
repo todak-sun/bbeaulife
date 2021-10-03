@@ -1,4 +1,4 @@
-package com.todak.bbeaulife.application.accountBook;
+package com.todak.bbeaulife.application.accountBook.entity;
 
 import com.todak.bbeaulife.entities.AbstractDateTimeEntity;
 import lombok.AccessLevel;

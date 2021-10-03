@@ -1,5 +1,7 @@
-package com.todak.bbeaulife.application.accountBook;
+package com.todak.bbeaulife.application.accountBook.entity;
 
+import com.todak.bbeaulife.application.accountBook.IncomeCategory;
+import com.todak.bbeaulife.application.accountBook.IncomeCategoryLevel1;
 import com.todak.bbeaulife.entities.AbstractDateTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
