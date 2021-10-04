@@ -1,7 +1,7 @@
 package com.todak.bbeaulife.application.accountBook;
 
 import com.todak.bbeaulife.application.accountBook.entity.AccountBookEntity;
-import com.todak.bbeaulife.application.accountBook.entity.AccountBookIncomeHistoryEntity;
+import com.todak.bbeaulife.application.accountBook.entity.IncomeHistoryEntity;
 import com.todak.bbeaulife.application.accountBook.exception.AlreadyExistAccountBookException;
 import com.todak.bbeaulife.application.accountBook.repository.AccountBookHistoryRepository;
 import com.todak.bbeaulife.application.accountBook.repository.AccountBookIncomeHistoryRepository;
@@ -85,7 +85,7 @@ public class AccountBookApplicationService {
 
     @Transactional
     public void modifyIncomeHistory(Long accountBookHistoryId, IncomeDto dto, Long writerId) {
-        AccountBookIncomeHistoryEntity incomeHistory = accountBookIncomeHistoryRepository.findById(accountBookHistoryId)
+        IncomeHistoryEntity incomeHistory = accountBookIncomeHistoryRepository.findById(accountBookHistoryId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 내역"));
 
         incomeHistory
