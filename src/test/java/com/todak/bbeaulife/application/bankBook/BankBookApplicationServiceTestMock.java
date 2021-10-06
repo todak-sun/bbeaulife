@@ -1,7 +1,6 @@
 package com.todak.bbeaulife.application.bankBook;
 
 import com.todak.bbeaulife.application.member.MemberApplicatoinService;
-import com.todak.bbeaulife.entities.BankBookEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

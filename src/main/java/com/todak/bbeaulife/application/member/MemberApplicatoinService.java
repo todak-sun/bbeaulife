@@ -36,7 +36,7 @@ public class MemberApplicatoinService {
     }
 
     @Transactional
-    public void withdrawal(Long memberId) {
+    public void withdraw(Long memberId) {
         MemberEntity memberEntity = memberRepository.findByIdAndActivatedTrue(memberId)
                 .orElseThrow(() -> new NotFoundMemberException(memberId));
         memberEntity.deactivate();

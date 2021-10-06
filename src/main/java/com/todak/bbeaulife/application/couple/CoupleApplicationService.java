@@ -64,7 +64,7 @@ public class CoupleApplicationService {
 
         CoupleRequestHash founded = coupleRequestRedisRepository.findById(requesterId)
                 .orElseThrow(() ->
-                        new CoupleMissMatchException(requesteeId, requesterId,
+                        new CoupleMissMatchException(requesterId, requesteeId,
                                 "수락 기간이 지났거나, 진행중인 커플 신청이 없습니다."));
 
         if (!founded.getRequesteeId().equals(requesteeId)) {

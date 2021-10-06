@@ -1,6 +1,6 @@
-package com.todak.bbeaulife.entities;
+package com.todak.bbeaulife.application.bankBook;
 
-import com.todak.bbeaulife.application.bankBook.Bank;
+import com.todak.bbeaulife.entities.AbstractDateTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

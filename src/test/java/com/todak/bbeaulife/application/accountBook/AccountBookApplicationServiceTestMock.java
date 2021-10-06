@@ -80,7 +80,6 @@ class AccountBookApplicationServiceTestMock {
         given(accountBookRepository.findByCoupleId(coupleId))
                 .willReturn(Optional.of(AccountBookEntity.create("name", coupleId)));
 
-        given(memberApplicatoinService.isMatchedCouple(memberId, coupleId));
 
         //when & then
         assertThrows(AlreadyExistAccountBookException.class,

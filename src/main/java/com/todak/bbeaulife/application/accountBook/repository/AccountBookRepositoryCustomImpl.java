@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.todak.bbeaulife.application.accountBook.entity.QAccountBookIncomeHistoryEntity.accountBookIncomeHistoryEntity;
+import static com.todak.bbeaulife.application.accountBook.entity.QIncomeHistoryEntity.incomeHistoryEntity;
 
 
 @RequiredArgsConstructor
@@ -18,17 +18,17 @@ public class AccountBookRepositoryCustomImpl implements AccountBookRepositoryCus
     @Override
     public List<IncomeHistory> findAllIncomeHistoriesByAccountBookId(Long accountBookId) {
         return qf.select(new QIncomeHistory(
-                accountBookIncomeHistoryEntity.id,
-                accountBookIncomeHistoryEntity.amount,
-                accountBookIncomeHistoryEntity.incomeCategory,
-                accountBookIncomeHistoryEntity.incomeCategoryLevel1,
-                accountBookIncomeHistoryEntity.description,
-                accountBookIncomeHistoryEntity.occuredDateTime,
-                accountBookIncomeHistoryEntity.writtenBy
+                incomeHistoryEntity.id,
+                incomeHistoryEntity.amount,
+                incomeHistoryEntity.category,
+                incomeHistoryEntity.categoryLevel1,
+                incomeHistoryEntity.description,
+                incomeHistoryEntity.occuredDateTime,
+                incomeHistoryEntity.writtenBy
         ))
-                .from(accountBookIncomeHistoryEntity)
-                .where(accountBookIncomeHistoryEntity.accountBook.id.eq(accountBookId))
-                .orderBy(accountBookIncomeHistoryEntity.occuredDateTime.desc())
+                .from(incomeHistoryEntity)
+                .where(incomeHistoryEntity.accountBook.id.eq(accountBookId))
+                .orderBy(incomeHistoryEntity.occuredDateTime.desc())
                 .fetch();
     }
 }

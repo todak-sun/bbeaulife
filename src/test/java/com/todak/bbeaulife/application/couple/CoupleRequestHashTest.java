@@ -9,11 +9,11 @@ import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CoupleRequestHashTest {
+class CoupleRequestHashTest {
 
     @DisplayName("정상적으로 CoupleRequestHash를 생성하는 테스트")
     @Test
-    public void createTest() {
+    void createTest() {
         long requesterId = 1L;
         long requesteeId = 2L;
         CoupleRole role = CoupleRole.WIFE;
@@ -29,7 +29,7 @@ public class CoupleRequestHashTest {
 
     @DisplayName("요청자와 피요청자가 같은 경우, 에러를 반환한다.")
     @Test
-    public void createTest_Fail() {
+    void createTest_Fail() {
         long requesterId = 1L;
         long requesteeId = 1L;
         CoupleMissMatchException coupleMissMatchException = assertThrows(CoupleMissMatchException.class,
@@ -40,6 +40,16 @@ public class CoupleRequestHashTest {
         assertNotNull(coupleMissMatchException.getMessage(), "message는 null이 아니다.");
         assertEquals(requesterId, coupleMissMatchException.getRequesterId(), "requestId가 동일하다.");
         assertEquals(requesteeId, coupleMissMatchException.getRequesteeId(), "requesteeId가 동일하다.");
+    }
+
+    @DisplayName("해쉬코드 값이 같은지 테스트")
+    @Test
+    void hashCodeTest() {
+
+        CoupleRequestHash hash1 = CoupleRequestHash.create(1L, 2L, CoupleRole.EMPTY);
+        CoupleRequestHash hash2 = CoupleRequestHash.create(1L, 2L, CoupleRole.EMPTY);
+
+        assertEquals(hash1.hashCode(), hash2.hashCode(), "데이터가 같다면, 해쉬값도 동일하게 나온다.");
     }
 
 }

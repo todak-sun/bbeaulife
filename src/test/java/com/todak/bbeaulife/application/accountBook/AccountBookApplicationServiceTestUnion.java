@@ -127,7 +127,7 @@ class AccountBookApplicationServiceTestUnion extends WithContainer {
                 .collect(Collectors.toList());
 
         //when
-        accountBookApplicationService.writeIncome(accountBook.getId(), dtos, 1L);
+        accountBookApplicationService.writeIncome(accountBook.getId(), dtos, couple.getHusband().getId());
 
         //then
         Optional<AccountBookEntity> optional = accountBookRepository.findById(accountBook.getId());

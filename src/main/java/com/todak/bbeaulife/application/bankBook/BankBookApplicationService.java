@@ -2,7 +2,6 @@ package com.todak.bbeaulife.application.bankBook;
 
 import com.todak.bbeaulife.application.member.MemberApplicatoinService;
 import com.todak.bbeaulife.application.member.exception.NotFoundMemberException;
-import com.todak.bbeaulife.entities.BankBookEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

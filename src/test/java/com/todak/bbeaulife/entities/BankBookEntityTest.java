@@ -1,6 +1,7 @@
 package com.todak.bbeaulife.entities;
 
 import com.todak.bbeaulife.application.bankBook.Bank;
+import com.todak.bbeaulife.application.bankBook.BankBookEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
