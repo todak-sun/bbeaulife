@@ -6,6 +6,7 @@ import com.todak.bbeaulife.application.member.MemberApplicatoinService;
 import com.todak.bbeaulife.application.member.repository.MemberRepository;
 import com.todak.bbeaulife.config.WithContainer;
 import com.todak.bbeaulife.type.CoupleRole;
+import com.todak.bbeaulife.type.Sex;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -83,10 +84,9 @@ class CoupleApplicationServiceTestUnion extends WithContainer {
     }
 
     private Member createWife() {
-        return memberApplicatoinService.createMember("wife@email.com", "wife-password", "wife-first", "wife-last");
+        return memberApplicatoinService.createMember("wife@email.com", "wife-password", "wife-first", "wife-last", Sex.FEMALE);
     }
 
     private Member createHusband() {
-        return memberApplicatoinService.createMember("husband@email.com", "husband-password", "husband-first", "husband-last");
-    }
+        return memberApplicatoinService.createMember("husband@email.com", "husband-password", "husband-first", "husband-last", Sex.MALE);    }
 }

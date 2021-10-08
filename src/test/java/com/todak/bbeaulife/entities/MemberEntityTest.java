@@ -1,10 +1,12 @@
 package com.todak.bbeaulife.entities;
 
 import com.todak.bbeaulife.type.FullName;
+import com.todak.bbeaulife.type.Sex;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 class MemberEntityTest {
@@ -18,7 +20,7 @@ class MemberEntityTest {
         String lastName = "lastName";
         FullName name = FullName.called(firstName, lastName);
 
-        MemberEntity memberEntity = MemberEntity.create(email, password, name);
+        MemberEntity memberEntity = MemberEntity.create(email, password, name, Sex.MALE);
 
         assertNotNull(memberEntity, "memberEntity는 null이 아니다");
         assertNull(memberEntity.getId(), "memberEntity를 최초 생성했을 때, ID는 존재하지 않는다.");

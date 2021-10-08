@@ -4,6 +4,7 @@ import com.todak.bbeaulife.application.member.exception.NotFoundMemberException;
 import com.todak.bbeaulife.application.member.repository.MemberRepository;
 import com.todak.bbeaulife.entities.MemberEntity;
 import com.todak.bbeaulife.type.FullName;
+import com.todak.bbeaulife.type.Sex;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -99,7 +100,7 @@ class MemberApplicatoinServiceTestMock {
     void withdraw_success() {
         //given
         long memberId = 1L;
-        MemberEntity memberEntity = spy(MemberEntity.create("email@email.com", "password", FullName.called("name", "name")));
+        MemberEntity memberEntity = spy(MemberEntity.create("email@email.com", "password", FullName.called("name", "name"), Sex.MALE));
 
         given(memberRepository.findByIdAndActivatedTrue(memberId))
                 .willReturn(Optional.of(memberEntity));

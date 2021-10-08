@@ -2,6 +2,7 @@ package com.todak.bbeaulife.entities;
 
 import com.todak.bbeaulife.type.CoupleRole;
 import com.todak.bbeaulife.type.FullName;
+import com.todak.bbeaulife.type.Sex;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,7 @@ public class MemberEntity extends AbstractDateTimeEntity {
     private Long id;
 
     @Getter
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", nullable = false)
     private String email;
 
     @Getter
@@ -40,7 +41,10 @@ public class MemberEntity extends AbstractDateTimeEntity {
     @Embedded
     private FullName name;
 
-    @Column(name = "PASSWORD")
+    @Column(name = "SEX", nullable = false)
+    private Sex sex;
+
+    @Column(name = "PASSWORD", nullable = false)
     private String password;
 
     @Getter
@@ -48,27 +52,28 @@ public class MemberEntity extends AbstractDateTimeEntity {
     private Long coupleId;
 
     @Getter
-    @Column(name = "ROLE")
+    @Column(name = "ROLE", nullable = false)
     @Enumerated(EnumType.STRING)
     private CoupleRole role;
 
-    @Column(name = "IS_ACTIVE")
+    @Column(name = "IS_ACTIVE", nullable = false)
     private boolean activated;
 
     public void deactivate() {
         this.activated = false;
     }
 
-    private MemberEntity(String email, String password, FullName name) {
+    private MemberEntity(String email, String password, FullName name, Sex sex) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = CoupleRole.EMPTY;
         this.activated = true;
+        this.sex = sex;
     }
 
-    public static MemberEntity create(String email, String password, FullName name) {
-        return new MemberEntity(email, password, name);
+    public static MemberEntity create(String email, String password, FullName name, Sex sex) {
+        return new MemberEntity(email, password, name, sex);
     }
 
     public boolean hasRelactionship() {

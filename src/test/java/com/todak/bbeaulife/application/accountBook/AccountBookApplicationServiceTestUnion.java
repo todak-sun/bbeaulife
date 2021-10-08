@@ -10,6 +10,7 @@ import com.todak.bbeaulife.application.member.MemberApplicatoinService;
 import com.todak.bbeaulife.application.member.repository.MemberRepository;
 import com.todak.bbeaulife.config.WithContainer;
 import com.todak.bbeaulife.type.CoupleRole;
+import com.todak.bbeaulife.type.Sex;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -141,8 +142,8 @@ class AccountBookApplicationServiceTestUnion extends WithContainer {
     }
 
     private Couple createCouple() {
-        Member wife = memberApplicatoinService.createMember("wife@email.com", "password", "first", "last");
-        Member husband = memberApplicatoinService.createMember("husband@email.com", "password", "first", "last");
+        Member wife = memberApplicatoinService.createMember("wife@email.com", "password", "first", "last", Sex.FEMALE);
+        Member husband = memberApplicatoinService.createMember("husband@email.com", "password", "first", "last", Sex.MALE);
 
         coupleApplicationService.suggestRelation(wife.getId(), CoupleRole.WIFE, husband.getId());
         return coupleApplicationService.acceptRelation(husband.getId(), wife.getId());

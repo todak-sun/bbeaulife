@@ -4,6 +4,7 @@ import com.todak.bbeaulife.application.member.Member;
 import com.todak.bbeaulife.config.WithContainer;
 import com.todak.bbeaulife.entities.MemberEntity;
 import com.todak.bbeaulife.type.FullName;
+import com.todak.bbeaulife.type.Sex;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ class MemberRepositoryTest extends WithContainer {
         String lastName = "lastName";
         FullName name = FullName.called(firstName, lastName);
 
-        MemberEntity newMember = MemberEntity.create(email, password, name);
+        MemberEntity newMember = MemberEntity.create(email, password, name, Sex.MALE);
 
         // when
         MemberEntity savedMember = memberRepository.save(newMember);
@@ -56,7 +57,7 @@ class MemberRepositoryTest extends WithContainer {
         String lastName = "lastName";
         FullName name = FullName.called(firstName, lastName);
 
-        MemberEntity newMember = MemberEntity.create(email, password, name);
+        MemberEntity newMember = MemberEntity.create(email, password, name, Sex.MALE);
 
         // when
         MemberEntity savedMember = memberRepository.save(newMember);

@@ -6,6 +6,7 @@ import com.todak.bbeaulife.application.member.repository.MemberRepository;
 import com.todak.bbeaulife.entities.MemberEntity;
 import com.todak.bbeaulife.type.CoupleRole;
 import com.todak.bbeaulife.type.FullName;
+import com.todak.bbeaulife.type.Sex;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,13 +44,13 @@ public class MemberApplicatoinService {
     }
 
     @Transactional
-    public Member createMember(String email, String password, String firstName, String lastName) {
+    public Member createMember(String email, String password, String firstName, String lastName, Sex sex) {
 
         if (memberRepository.existsByEmail(email)) {
             throw new DuplicateEmailException(email);
         }
 
-        MemberEntity newMember = MemberEntity.create(email, password, FullName.called(firstName, lastName));
+        MemberEntity newMember = MemberEntity.create(email, password, FullName.called(firstName, lastName), sex);
 
         MemberEntity savedMember = memberRepository.save(newMember);
 
