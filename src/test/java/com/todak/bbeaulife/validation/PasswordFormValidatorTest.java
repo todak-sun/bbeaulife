@@ -1,7 +1,7 @@
 package com.todak.bbeaulife.validation;
 
 import com.todak.bbeaulife.type.PasswordForm;
-import com.todak.bbeaulife.validation.annotation.PasswordConstraint;
+import com.todak.bbeaulife.validation.annotation.PasswordGroupConstraint;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -70,7 +70,7 @@ class PasswordFormValidatorTest extends AbstractValidatorTest {
     }
 
     static class Tester {
-        @PasswordConstraint(
+        @PasswordGroupConstraint(
                 pattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,16}$",
                 message = "비밀번호는 영 대/소문자로 시작하며, 숫자, 특수문자가 각 한 개씩 포함된 8 ~ 16자로 설정 가능합니다.")
         PasswordTester passwordTester;

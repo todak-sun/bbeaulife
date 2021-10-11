@@ -2,7 +2,7 @@ package com.todak.bbeaulife.api.request.member;
 
 import com.todak.bbeaulife.type.Sex;
 import com.todak.bbeaulife.validation.annotation.DomainConstraint;
-import com.todak.bbeaulife.validation.annotation.PasswordConstraint;
+import com.todak.bbeaulife.validation.annotation.PasswordGroupConstraint;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +15,7 @@ public class MemberCreate {
     @NotEmpty(message = "이메일을 입력해주세요.")
     private final String email;
 
-    @PasswordConstraint(pattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,16}$")
+    @PasswordGroupConstraint(pattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,16}$")
     private final PasswordGroup passwordGroup;
 
     @NotEmpty(message = "성을 입력해주세요")

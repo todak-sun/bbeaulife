@@ -1,19 +1,19 @@
 package com.todak.bbeaulife.validation;
 
 import com.todak.bbeaulife.type.PasswordForm;
-import com.todak.bbeaulife.validation.annotation.PasswordConstraint;
+import com.todak.bbeaulife.validation.annotation.PasswordGroupConstraint;
 
 import javax.validation.ConstraintValidatorContext;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class PasswordFormValidator extends AbstractConstraintValidator<PasswordConstraint, PasswordForm> {
+public class PasswordFormValidator extends AbstractConstraintValidator<PasswordGroupConstraint, PasswordForm> {
 
     private Pattern pattern;
 
     @Override
-    public void initialize(PasswordConstraint passwordConstraint) {
-        this.pattern = Pattern.compile(passwordConstraint.pattern());
+    public void initialize(PasswordGroupConstraint passwordGroupConstraint) {
+        this.pattern = Pattern.compile(passwordGroupConstraint.pattern());
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PasswordFormValidator.class)
-public @interface PasswordConstraint {
+public @interface PasswordGroupConstraint {
 
     String message() default "";
 
