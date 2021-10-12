@@ -18,6 +18,16 @@ spring:
     host: ${CONTAINER_REDIS_HOST}
     port: ${CONTAINER_REDIS_PORT}
 
+#  mail:
+#    default-encoding: ${GMAIL_ENCODING}
+#    host: ${GMAIL_HOST}
+#    username: ${GMAIL_USERNAME}
+#    password: ${GMAIL_PASSWORD}
+#    port: ${GMAIL_PORT}
+
+
+
+
 logging:
   level:
     org.hibernate.SQL: trace
