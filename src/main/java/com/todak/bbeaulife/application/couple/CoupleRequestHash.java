@@ -54,11 +54,11 @@ public class CoupleRequestHash {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CoupleRequestHash that = (CoupleRequestHash) o;
-        return Objects.equals(requesterId, that.requesterId) && Objects.equals(requesteeId, that.requesteeId) && Objects.equals(requesterRole, that.requesterRole) && Objects.equals(timeout, that.timeout);
+        return Objects.equals(requesterId, that.requesterId) && Objects.equals(requesteeId, that.requesteeId) && Objects.equals(requesterRole, that.requesterRole);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requesterId, requesteeId, requesterRole, timeout);
+        return Objects.hash(requesterId, requesteeId, requesterRole);
     }
 }

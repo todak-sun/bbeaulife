@@ -2,6 +2,7 @@ package com.todak.bbeaulife.application.member;
 
 import com.todak.bbeaulife.application.member.exception.NotFoundMemberException;
 import com.todak.bbeaulife.application.member.repository.MemberRepository;
+import com.todak.bbeaulife.application.member.repository.UncertificatedMemberRepository;
 import com.todak.bbeaulife.entities.MemberEntity;
 import com.todak.bbeaulife.type.FullName;
 import com.todak.bbeaulife.type.Sex;
@@ -30,9 +31,12 @@ class MemberApplicatoinServiceTestMock {
     @Mock
     MemberRepository memberRepository;
 
+    @Mock
+    UncertificatedMemberRepository uncertificatedMemberRepository;
+
     @BeforeEach
     void setUp() {
-        this.memberApplicatoinService = new MemberApplicatoinService(memberRepository);
+        this.memberApplicatoinService = new MemberApplicatoinService(memberRepository, uncertificatedMemberRepository);
     }
 
     @DisplayName("mocking이 잘 됐는지 테스트")
