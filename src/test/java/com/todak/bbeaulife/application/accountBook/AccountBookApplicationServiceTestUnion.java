@@ -7,7 +7,9 @@ import com.todak.bbeaulife.application.couple.CoupleApplicationService;
 import com.todak.bbeaulife.application.couple.repository.CoupleRepository;
 import com.todak.bbeaulife.application.member.Member;
 import com.todak.bbeaulife.application.member.MemberApplicatoinService;
+import com.todak.bbeaulife.application.member.UncertificatedMember;
 import com.todak.bbeaulife.application.member.repository.MemberRepository;
+import com.todak.bbeaulife.application.member.repository.UncertificatedMemberRepository;
 import com.todak.bbeaulife.config.WithContainer;
 import com.todak.bbeaulife.type.CoupleRole;
 import com.todak.bbeaulife.type.Sex;
@@ -49,6 +51,9 @@ class AccountBookApplicationServiceTestUnion extends WithContainer {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    UncertificatedMemberRepository uncertificatedMemberRepository;
 
     @AfterEach
     void afterEach() {
@@ -142,8 +147,16 @@ class AccountBookApplicationServiceTestUnion extends WithContainer {
     }
 
     private Couple createCouple() {
-        Member wife = memberApplicatoinService.createMember("wife@email.com", "password", "first", "last", Sex.FEMALE);
-        Member husband = memberApplicatoinService.createMember("husband@email.com", "password", "first", "last", Sex.MALE);
+        String wifeEmail = "wife@email.com";
+
+        memberApplicatoinService.createMember(wifeEmail, "password", "first", "last", Sex.FEMALE);
+        UncertificatedMember cachedWife = uncertificatedMemberRepository.findById(wifeEmail).get();
+        Member wife = memberApplicatoinService.certificateMember(wifeEmail, cachedWife.getCirtificateCode());
+
+        String husbandEmail = "husband@email.com";
+        memberApplicatoinService.createMember(husbandEmail, "password", "first", "last", Sex.MALE);
+        UncertificatedMember cachedHusband = uncertificatedMemberRepository.findById(husbandEmail).get();
+        Member husband = memberApplicatoinService.certificateMember(husbandEmail, cachedHusband.getCirtificateCode());
 
         coupleApplicationService.suggestRelation(wife.getId(), CoupleRole.WIFE, husband.getId());
         return coupleApplicationService.acceptRelation(husband.getId(), wife.getId());

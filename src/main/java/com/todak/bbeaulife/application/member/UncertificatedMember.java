@@ -30,6 +30,8 @@ public class UncertificatedMember {
 
     @Getter
     private String cirtificateCode;
+
+    @Getter
     private Sex sex;
 
     @TimeToLive

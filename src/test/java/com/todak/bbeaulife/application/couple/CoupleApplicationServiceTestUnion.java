@@ -3,7 +3,9 @@ package com.todak.bbeaulife.application.couple;
 import com.todak.bbeaulife.application.couple.repository.CoupleRepository;
 import com.todak.bbeaulife.application.member.Member;
 import com.todak.bbeaulife.application.member.MemberApplicatoinService;
+import com.todak.bbeaulife.application.member.UncertificatedMember;
 import com.todak.bbeaulife.application.member.repository.MemberRepository;
+import com.todak.bbeaulife.application.member.repository.UncertificatedMemberRepository;
 import com.todak.bbeaulife.config.WithContainer;
 import com.todak.bbeaulife.type.CoupleRole;
 import com.todak.bbeaulife.type.Sex;
@@ -31,6 +33,8 @@ class CoupleApplicationServiceTestUnion extends WithContainer {
     CoupleRepository coupleRepository;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    UncertificatedMemberRepository uncertificatedMemberRepository;
 
     @AfterEach
     void afterEach() {
@@ -84,9 +88,16 @@ class CoupleApplicationServiceTestUnion extends WithContainer {
     }
 
     private Member createWife() {
-        return memberApplicatoinService.createMember("wife@email.com", "wife-password", "wife-first", "wife-last", Sex.FEMALE);
+        String email = "wife@email.com";
+        memberApplicatoinService.createMember(email, "wife-password", "wife-first", "wife-last", Sex.FEMALE);
+        UncertificatedMember cache = uncertificatedMemberRepository.findById(email).get();
+        return memberApplicatoinService.certificateMember(email, cache.getCirtificateCode());
     }
 
     private Member createHusband() {
-        return memberApplicatoinService.createMember("husband@email.com", "husband-password", "husband-first", "husband-last", Sex.MALE);    }
+        String email = "husband@email.com";
+        memberApplicatoinService.createMember(email, "husband-password", "husband-first", "husband-last", Sex.MALE);
+        UncertificatedMember cache = uncertificatedMemberRepository.findById(email).get();
+        return memberApplicatoinService.certificateMember(email, cache.getCirtificateCode());
+    }
 }
