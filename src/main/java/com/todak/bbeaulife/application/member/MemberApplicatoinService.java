@@ -45,8 +45,7 @@ public class MemberApplicatoinService {
         memberEntity.deactivate();
     }
 
-    @Transactional
-    public Member createMember(String email, String password, String firstName, String lastName, Sex sex) {
+    public Long createMember(String email, String password, String firstName, String lastName, Sex sex) {
 
         if (uncertificatedMemberRepository.existsById(email)) {
             throw new DuplicateEmailException(email);
@@ -56,19 +55,29 @@ public class MemberApplicatoinService {
             throw new DuplicateEmailException(email);
         }
 
-        uncertificatedMemberRepository.save(UncertificatedMember.create(
+        UncertificatedMember cachedMember = uncertificatedMemberRepository.save(UncertificatedMember.create(
                 email,
                 password,
                 FullName.called(firstName, lastName),
                 sex
         ));
-
-        MemberEntity newMember = MemberEntity.create(email, password, FullName.called(firstName, lastName), sex);
-
-        MemberEntity savedMember = memberRepository.save(newMember);
-
-        return MemberResolver.resolve(savedMember);
+        return cachedMember.getTimeout();
     }
+
+    public Member certificateMember(String email, String certificateCode) {
+
+        UncertificatedMember cachedMember = uncertificatedMemberRepository
+                .findById(email)
+                .orElseThrow(() -> new RuntimeException("인증 시간이 만료되었습니다."));
+
+        if(!cachedMember.isValidCode(certificateCode)){
+                   throw new RuntimeException("인증된 코드가 아닙니다.");
+        }
+
+
+
+    }
+
 
     @Transactional
     public Member promoteAsCouple(Long memberId, Long coulpleId, CoupleRole coupleRole) {
