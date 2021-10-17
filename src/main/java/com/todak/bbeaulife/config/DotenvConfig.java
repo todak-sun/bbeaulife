@@ -1,27 +1,32 @@
 package com.todak.bbeaulife.config;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class DotenvConfig implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+@RequiredArgsConstructor
+@Configuration
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class DotenvConfig {
 
-    @Override
-    public void initialize(ConfigurableApplicationContext applicationContext) {
-        ConfigurableEnvironment environment = applicationContext.getEnvironment();
-        Map<String, Object> systemEnvironment = environment.getSystemEnvironment();
-        systemEnvironment.putAll(getEnviromentDotenv());
+    @PostConstruct
+    public void initialize() {
+        Properties properties = System.getProperties();
+        properties.putAll(getEnviromentDotenv());
     }
 
     private Map<String, Object> getEnviromentDotenv() {
@@ -38,11 +43,11 @@ public class DotenvConfig implements ApplicationContextInitializer<ConfigurableA
                     String value = keyValue[1];
                     env.put(key, value);
                 });
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        log.info("env : {}", env);
         return env;
     }
 
