@@ -10,7 +10,7 @@ import java.util.Map;
 @Slf4j
 @ActiveProfiles("test")
 @SpringBootTest
-class DotenvConfigTest extends WithContainer {
+class DotenvLoaderTest extends WithContainer {
 
 
     @Test
