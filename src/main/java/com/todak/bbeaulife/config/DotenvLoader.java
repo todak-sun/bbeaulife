@@ -26,7 +26,7 @@ public class DotenvLoader {
     }
 
     public String getString(String key) {
-        return (String) this.envs.get(key);
+        return this.envs.get(key);
     }
 
     public Integer getInteger(String key) {
