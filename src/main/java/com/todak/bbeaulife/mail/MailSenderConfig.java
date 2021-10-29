@@ -17,8 +17,8 @@ public class MailSenderConfig {
     private final String protocol;
     private final int port;
     private final boolean auth;
-    private final boolean sslEnable;
-    private final String sslTrust;
+    private final String sslEnable;
+//    private final String sslTrust;
     private final String encoding;
 
     public MailSenderConfig(DotenvLoader dotenvLoader) {
@@ -28,8 +28,8 @@ public class MailSenderConfig {
         this.port = dotenvLoader.getInteger("GMAIL_PORT");
         this.protocol = dotenvLoader.getString("GMAIL_PROTOCOL");
         this.auth = dotenvLoader.getBoolean("GMAIL_AUTH");
-        this.sslEnable = dotenvLoader.getBoolean("GMAIL_SSL_ENABLE");
-        this.sslTrust = dotenvLoader.getString("GMAIL_SSL_TRUST");
+        this.sslEnable = dotenvLoader.getString("GMAIL_SSL_ENABLE");
+//        this.sslTrust = dotenvLoader.getString("GMAIL_SSL_TRUST");
         this.encoding = dotenvLoader.getString("GMAIL_ENCODING");
     }
 
@@ -43,10 +43,10 @@ public class MailSenderConfig {
         javaMailSender.setUsername(username);
         javaMailSender.setDefaultEncoding(encoding);
 
-//        javaMailSender.setHost();
 
-        Properties properties = javaMailSender.getJavaMailProperties();
-//        properties.setProperty("")
+        Properties props = javaMailSender.getJavaMailProperties();
+//        props.setProperty()
+        props.setProperty("mail.smtp.starttls.enable", this.sslEnable);
 
         return javaMailSender;
     }
