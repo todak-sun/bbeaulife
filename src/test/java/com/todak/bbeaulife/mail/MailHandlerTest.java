@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import javax.mail.MessagingException;
+
 @ActiveProfiles("test")
 @SpringBootTest
 class MailHandlerTest extends WithContainer {
@@ -16,7 +18,7 @@ class MailHandlerTest extends WithContainer {
 
 
     @Test
-    void send_test() {
+    void send_test() throws MessagingException {
         mailHandler.send();
     }
 

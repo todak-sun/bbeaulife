@@ -5,6 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.templatemode.TemplateMode;
 
 import java.util.Properties;
 
@@ -29,6 +33,25 @@ public class MailSenderConfig {
         this.auth = dotenvLoader.getString("GMAIL_AUTH");
         this.sslEnable = dotenvLoader.getString("GMAIL_SSL_ENABLE");
         this.encoding = dotenvLoader.getString("GMAIL_ENCODING");
+    }
+
+    @Bean
+    public TemplateEngine htmlTemplateEngine() {
+        TemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.addTemplateResolver(springResourceTemplateResolver());
+        return templateEngine;
+    }
+
+    @Bean
+    public SpringResourceTemplateResolver springResourceTemplateResolver() {
+        SpringResourceTemplateResolver springResourceTemplateResolver = new SpringResourceTemplateResolver();
+        springResourceTemplateResolver.setOrder(1);
+        springResourceTemplateResolver.setPrefix("classpath:mail-template/");
+        springResourceTemplateResolver.setSuffix(".html");
+        springResourceTemplateResolver.setTemplateMode(TemplateMode.HTML);
+        springResourceTemplateResolver.setCharacterEncoding("UTF-8");
+        springResourceTemplateResolver.setCacheable(false);
+        return springResourceTemplateResolver;
     }
 
     @Bean
